@@ -1,0 +1,23 @@
+{
+  "name": "nba-top-trumps",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Tehes/nba-top-trumps.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Tehes/nba-top-trumps/issues"
+  },
+  "homepage": "https://github.com/Tehes/nba-top-trumps#readme",
+  "dependencies": {
+    "puppeteer": "^19.6.2"
+  }
+}
