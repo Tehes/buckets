@@ -16,21 +16,29 @@ import puppeteer from 'puppeteer';
 
     // scrape the data 
     const data = await page.evaluate(() => {
+        const example = document.querySelectorAll('select')[5];
+        const example_options = example.querySelectorAll('option');
+
+        example_options[0].selected = true;
+        const event = new Event('change', { bubbles: true });
+        example.dispatchEvent(event);
+
+
         const props = document.querySelectorAll("table th");
         const rows = document.querySelectorAll("table tr");
-        const data = [];
+        const arr = [];
 
         for (let i = 1; i < rows.length; i++) {
             const playerObject = {};
             const cells = rows[i].querySelectorAll("td");
             for (let j = 0; j < cells.length; j++) {
-                playerObject[props[j].textContent.trim()] = cells[j].textContent.trim();    
-                playerObject.id = cells[1].querySelector("a").href.replace(/[^0-9]/g, "");    
-                playerObject.pic = `https://cdn.nba.com/headshots/nba/latest/1040x760/${playerObject.id}.png`; 
+                playerObject[props[j].textContent.trim()] = cells[j].textContent.trim();
+                playerObject.id = cells[1].querySelector("a").href.replace(/[^0-9]/g, "");
+                playerObject.pic = `https://cdn.nba.com/headshots/nba/latest/1040x760/${playerObject.id}.png`;
             }
-            data.push(playerObject);
+            arr.push(playerObject);
         }
-        return data;
+        return arr;
     });
 
     // write the JSON file to disk
