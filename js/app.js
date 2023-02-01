@@ -10,7 +10,11 @@ async function fetchStats() {
 /* --------------------------------------------------------------------------------------------------
 Variables
 ---------------------------------------------------------------------------------------------------*/
-
+ const leftCard = document.querySelector(".left");
+ leftCard.team = leftCard.querySelector("h2");
+ leftCard.setBgColor = function(value) {
+    document.body.style.setProperty("--bg-left", "var(--"+ value +")");
+ }
 
 /* --------------------------------------------------------------------------------------------------
 functions
@@ -22,6 +26,7 @@ function init() {
     fetchStats().then(
         function(data) {console.log(data[0]);}
       );
+    console.log(leftCard.team);
 }
 
 /* --------------------------------------------------------------------------------------------------
