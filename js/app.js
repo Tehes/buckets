@@ -1,6 +1,11 @@
 /* --------------------------------------------------------------------------------------------------
 Imports
 ---------------------------------------------------------------------------------------------------*/
+async function fetchStats() {
+    const response = await fetch('data.json');
+    const json = await response.json();
+    return json;
+}
 
 /* --------------------------------------------------------------------------------------------------
 Variables
@@ -10,16 +15,12 @@ Variables
 /* --------------------------------------------------------------------------------------------------
 functions
 ---------------------------------------------------------------------------------------------------*/
-async function fetchStats() {
-    const response = await fetch('data.json');
-    const json = await response.json();
-    return json;
-}
+
 
 function init() {
     document.addEventListener("touchstart", function() {}, false);
     fetchStats().then(
-        function(data) {console.log(data);}
+        function(data) {console.log(data[0]);}
       );
 }
 
