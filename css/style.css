@@ -1,8 +1,8 @@
 :root {
   --bg-color: hsl(0, 0%, 100%);
-  --font-color: hsl(0, 0%, 20%);
+  --font-color: hsl(0, 0%, 25%);
   --rounded-corners: 10px;
-  --drop-shadow: 2px 2px 2px 1px rgba(0, 0, 0, 0.2);
+  --drop-shadow: 1px 1px 10px 3px rgba(0, 0, 0, 0.2);
 
   --ATL: #e03a3e;
   --BKN: #000000;
@@ -52,9 +52,9 @@ html {
 
 body {
     --bg-left: var(--DEN);
-    --bg-right: var(--TOR);
+    --bg-right: var(--ATL);
     --bg-img-left: url(../img/DEN.svg);
-    --bg-img-right: url(../img/TOR.svg);
+    --bg-img-right: url(../img/ATL.svg);
 
     background: var(--bg-img-left) left top no-repeat,
     var(--bg-img-right) right top no-repeat,
@@ -76,6 +76,7 @@ body {
     justify-content: flex-start;
     align-items: center;
     flex-direction: column;
+    transition: all 0.5s;
 }
 
 
@@ -97,6 +98,8 @@ header h1 {
     margin: 0;
     padding: 0;
     font-size: 3vmin;
+    text-transform: uppercase;
+    font-weight: 900;
 }
 
 /*
@@ -112,11 +115,71 @@ main {
 }
 
 section {
-    width: 30vw;
-    height: 35vw;
+    width: 45vmin;
+    height: 55vmin;
     background-color: var(--bg-color);
     border-radius: var(--rounded-corners);
     box-shadow: var(--drop-shadow);
+}
+
+.img-bg {
+    height: 40%;  
+    background: linear-gradient(90deg, #bbb, #ddd);
+    border-radius: var(--rounded-corners) var(--rounded-corners) 0 0;
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    padding-top: 3%;
+    position: relative;
+}
+
+.img-bg img  {
+    margin-left: 6vmin;
+    height: 100%;
+    object-fit: contain;
+}
+
+.img-bg h2 {
+    transform: rotate(-90deg);
+    font-size: 8vmin;
+    font-weight: 900;
+    color: #ddd;
+    margin: 0;
+    padding: 0;
+    height: 9vmin;
+    position: absolute;
+    top: 30%;
+    left: -12%;
+}
+
+main h1 {
+    margin: 0.7vmin 0 0 2vmin;
+    font-size: 4vmin;
+    text-transform: uppercase;
+    color: #bbb;
+    text-shadow: 1px 1px #666;
+    font-weight: 800;
+}
+
+main ul {
+    margin: 1vmin 0 0 2vmin;
+    padding: 0;
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5%;
+}
+
+main li {
+    font-size: 1.8vmin;
+    font-weight: 800;
+    padding: 0.7vmin 0;
+    color: var(--font-color);
+    width: 20%;
+}
+
+main li:nth-of-type(odd) {
+    color: #666;
 }
 
 /*
@@ -131,6 +194,16 @@ aside {
     height: 8vw;
     background-color: var(--bg-color);
     border-radius: var(--rounded-corners);
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+
+aside output {
+    font-size: 10vmin;
+    color: #bbb;
+    text-shadow: 1px 1px #999;
+    font-weight: 800;
 }
 
 /*
