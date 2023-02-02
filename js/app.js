@@ -74,6 +74,13 @@ String.prototype.shuffle = function () {
     return chars.join("");
 };
 
+function compareValues(ev) {
+    if (Object.keys(ev.target.dataset).length > 0) {
+        const category = Object.keys(ev.target.dataset)[0];
+        console.log(category);
+    }
+}
+
 function init() {
     document.addEventListener("touchstart", function () { }, false);
 
@@ -81,6 +88,8 @@ function init() {
 
     setCard("left", stats[0]);
     setCard("right", stats[1]);
+
+    document.addEventListener("click", compareValues, false);
 }
 
 /* --------------------------------------------------------------------------------------------------
