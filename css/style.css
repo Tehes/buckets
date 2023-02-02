@@ -199,8 +199,8 @@ ASIDE
 
 aside {
     margin-top: 5vh;
-    width: 20vw;
-    height: 8vw;
+    width: 30vmin;
+    padding: 1vmin;
     background-color: var(--bg-color);
     border-radius: var(--rounded-corners);
     display: flex;
@@ -213,6 +213,7 @@ aside output {
     color: #bbb;
     text-shadow: 1px 1px #999;
     font-weight: 800;
+    line-height: 1;
 }
 
 /*

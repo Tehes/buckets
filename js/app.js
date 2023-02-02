@@ -32,18 +32,32 @@ function setCard(side, data) {
     //set team short name
     card.team.textContent = data.TEAM;
     // set values 
-    card.querySelector("[data-gp]").textContent = data["GP"];
-    card.querySelector("[data-min]").textContent = data["MIN"];
-    card.querySelector("[data-pts]").textContent = data["PTS"];
-    card.querySelector("[data-fgp]").textContent = data["FG%"];
-    card.querySelector("[data-3pm]").textContent = data["3PM"];
-    card.querySelector("[data-3pp]").textContent = data["3P%"];
-    card.querySelector("[data-ftp]").textContent = data["FT%"];
-    card.querySelector("[data-reb]").textContent = data["REB"];
-    card.querySelector("[data-ast]").textContent = data["AST"];
-    card.querySelector("[data-stl]").textContent = data["STL"];
-    card.querySelector("[data-blk]").textContent = data["BLK"];
-    card.querySelector("[data-eff]").textContent = data["EFF"];
+    if (side === "left") {
+        card.querySelector("[data-gp]").textContent = data["GP"];
+        card.querySelector("[data-min]").textContent = data["MIN"];
+        card.querySelector("[data-pts]").textContent = data["PTS"];
+        card.querySelector("[data-fgp]").textContent = data["FG%"];
+        card.querySelector("[data-3pm]").textContent = data["3PM"];
+        card.querySelector("[data-3pp]").textContent = data["3P%"];
+        card.querySelector("[data-ftp]").textContent = data["FT%"];
+        card.querySelector("[data-reb]").textContent = data["REB"];
+        card.querySelector("[data-ast]").textContent = data["AST"];
+        card.querySelector("[data-stl]").textContent = data["STL"];
+        card.querySelector("[data-blk]").textContent = data["BLK"];
+        card.querySelector("[data-eff]").textContent = data["EFF"];
+    }
+    card.querySelector("[data-gp]").dataset["gp"] = data["GP"];
+    card.querySelector("[data-min]").dataset["min"] = data["MIN"];
+    card.querySelector("[data-pts]").dataset["pts"] = data["PTS"];
+    card.querySelector("[data-fgp]").dataset["fgp"] = data["FG%"];
+    card.querySelector("[data-3pm]").dataset["3pm"] = data["3PM"];
+    card.querySelector("[data-3pp]").dataset["3pp"] = data["3P%"];
+    card.querySelector("[data-ftp]").dataset["ftp"] = data["FT%"];
+    card.querySelector("[data-reb]").dataset["reb"] = data["REB"];
+    card.querySelector("[data-ast]").dataset["ast"] = data["AST"];
+    card.querySelector("[data-stl]").dataset["stl"] = data["STL"];
+    card.querySelector("[data-blk]").dataset["blk"] = data["BLK"];
+    card.querySelector("[data-eff]").dataset["eff"] = data["EFF"];
 }
 
 
@@ -62,9 +76,9 @@ String.prototype.shuffle = function () {
 
 function init() {
     document.addEventListener("touchstart", function () { }, false);
-    
+
     stats.sort((a, b) => 0.5 - Math.random());
-    
+
     setCard("left", stats[0]);
     setCard("right", stats[1]);
 }
