@@ -154,7 +154,7 @@ section {
 }
 
 main h1 {
-    margin: 0.7vmin 0 0 2vmin;
+    margin: 0.7vmin 2vmin 0 2vmin;
     font-size: 4vmin;
     text-transform: uppercase;
     color: #bbb;
@@ -180,8 +180,15 @@ main li {
     width: 20%;
 }
 
+main li:nth-of-type(even):hover {
+    background-color: #eee;
+    text-align: center;
+    border-radius: var(--rounded-corners);
+    cursor: pointer;
+}
+
 main li:nth-of-type(odd) {
-    color: #666;
+    color: #999;
 }
 
 /*
