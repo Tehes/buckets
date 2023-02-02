@@ -22,42 +22,42 @@ function setCard(side, data) {
     card.playerName = card.querySelector("h1");
 
     // set background Color
-    document.body.style.setProperty(`--bg-${side}`, `var(--${data.TEAM})`);
+    document.body.style.setProperty(`--bg-${side}`, `var(--${data.team})`);
     // set team logo
-    document.body.style.setProperty(`--bg-img-${side}`, `url(../img/${data.TEAM}.svg)`);
+    document.body.style.setProperty(`--bg-img-${side}`, `url(../img/${data.team}.svg)`);
     // set player name
-    card.playerName.textContent = data.Player;
+    card.playerName.textContent = data.player;
     //set player picture
     card.playerImg.src = data.pic;
     //set team short name
-    card.team.textContent = data.TEAM;
+    card.team.textContent = data.team;
     // set values 
     if (side === "left") {
-        card.querySelector("[data-gp]").textContent = data["GP"];
-        card.querySelector("[data-min]").textContent = data["MIN"];
-        card.querySelector("[data-pts]").textContent = data["PTS"];
-        card.querySelector("[data-fgp]").textContent = data["FG%"];
-        card.querySelector("[data-3pm]").textContent = data["3PM"];
-        card.querySelector("[data-3pp]").textContent = data["3P%"];
-        card.querySelector("[data-ftp]").textContent = data["FT%"];
-        card.querySelector("[data-reb]").textContent = data["REB"];
-        card.querySelector("[data-ast]").textContent = data["AST"];
-        card.querySelector("[data-stl]").textContent = data["STL"];
-        card.querySelector("[data-blk]").textContent = data["BLK"];
-        card.querySelector("[data-eff]").textContent = data["EFF"];
+        card.querySelector("[data-gp]").textContent = data["gp"];
+        card.querySelector("[data-min]").textContent = data["min"];
+        card.querySelector("[data-pts]").textContent = data["pts"];
+        card.querySelector("[data-fgp]").textContent = data["fg%"];
+        card.querySelector("[data-3pm]").textContent = data["3pm"];
+        card.querySelector("[data-3pp]").textContent = data["3p%"];
+        card.querySelector("[data-ftp]").textContent = data["ft%"];
+        card.querySelector("[data-reb]").textContent = data["reb"];
+        card.querySelector("[data-ast]").textContent = data["ast"];
+        card.querySelector("[data-stl]").textContent = data["stl"];
+        card.querySelector("[data-blk]").textContent = data["blk"];
+        card.querySelector("[data-eff]").textContent = data["eff"];
     }
-    card.querySelector("[data-gp]").dataset["gp"] = data["GP"];
-    card.querySelector("[data-min]").dataset["min"] = data["MIN"];
-    card.querySelector("[data-pts]").dataset["pts"] = data["PTS"];
-    card.querySelector("[data-fgp]").dataset["fgp"] = data["FG%"];
-    card.querySelector("[data-3pm]").dataset["3pm"] = data["3PM"];
-    card.querySelector("[data-3pp]").dataset["3pp"] = data["3P%"];
-    card.querySelector("[data-ftp]").dataset["ftp"] = data["FT%"];
-    card.querySelector("[data-reb]").dataset["reb"] = data["REB"];
-    card.querySelector("[data-ast]").dataset["ast"] = data["AST"];
-    card.querySelector("[data-stl]").dataset["stl"] = data["STL"];
-    card.querySelector("[data-blk]").dataset["blk"] = data["BLK"];
-    card.querySelector("[data-eff]").dataset["eff"] = data["EFF"];
+    card.querySelector("[data-gp]").dataset["gp"] = data["gp"];
+    card.querySelector("[data-min]").dataset["min"] = data["min"];
+    card.querySelector("[data-pts]").dataset["pts"] = data["pts"];
+    card.querySelector("[data-fgp]").dataset["fgp"] = data["fg%"];
+    card.querySelector("[data-3pm]").dataset["3pm"] = data["3pm"];
+    card.querySelector("[data-3pp]").dataset["3pp"] = data["3p%"];
+    card.querySelector("[data-ftp]").dataset["ftp"] = data["ft%"];
+    card.querySelector("[data-reb]").dataset["reb"] = data["reb"];
+    card.querySelector("[data-ast]").dataset["ast"] = data["ast"];
+    card.querySelector("[data-stl]").dataset["stl"] = data["stl"];
+    card.querySelector("[data-blk]").dataset["blk"] = data["blk"];
+    card.querySelector("[data-eff]").dataset["eff"] = data["eff"];
 }
 
 
