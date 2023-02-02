@@ -10,20 +10,42 @@ async function fetchStats() {
 /* --------------------------------------------------------------------------------------------------
 Variables
 ---------------------------------------------------------------------------------------------------*/
-const leftCard = document.querySelector(".left");
-leftCard.team = leftCard.querySelector("h2");
-leftCard.setBgColor = function (value) {
-    document.body.style.setProperty("--bg-left", `var(--${value})`);
-}
-leftCard.setLogo = function (value) {
-    document.body.style.setProperty("--bg-img-left", `url(../img/${value}.svg)`);
-}
-leftCard.playerImg = leftCard.querySelector("img");
-leftCard.playerName = leftCard.querySelector("h1");
+const stats = await fetchStats();
 
 /* --------------------------------------------------------------------------------------------------
 functions
 ---------------------------------------------------------------------------------------------------*/
+function setCard(side, data) {
+    const card = document.querySelector(`.${side}`);
+    card.team = card.querySelector("h2");
+    card.playerImg = card.querySelector("img");
+    card.playerName = card.querySelector("h1");
+
+    // set background Color
+    document.body.style.setProperty(`--bg-${side}`, `var(--${data.TEAM})`);
+    // set team logo
+    document.body.style.setProperty(`--bg-img-${side}`, `url(../img/${data.TEAM}.svg)`);
+    // set player name
+    card.playerName.textContent = data.Player;
+    //set player picture
+    card.playerImg.src = data.pic;
+    //set team short name
+    card.team.textContent = data.TEAM;
+    // set values 
+    card.querySelector("[data-gp]").textContent = data["GP"];
+    card.querySelector("[data-min]").textContent = data["MIN"];
+    card.querySelector("[data-pts]").textContent = data["PTS"];
+    card.querySelector("[data-fgp]").textContent = data["FG%"];
+    card.querySelector("[data-3pm]").textContent = data["3PM"];
+    card.querySelector("[data-3pp]").textContent = data["3P%"];
+    card.querySelector("[data-ftp]").textContent = data["FT%"];
+    card.querySelector("[data-reb]").textContent = data["REB"];
+    card.querySelector("[data-ast]").textContent = data["AST"];
+    card.querySelector("[data-stl]").textContent = data["STL"];
+    card.querySelector("[data-blk]").textContent = data["BLK"];
+    card.querySelector("[data-eff]").textContent = data["EFF"];
+}
+
 
 String.prototype.shuffle = function () {
     var chars = this.split("");
@@ -40,20 +62,11 @@ String.prototype.shuffle = function () {
 
 function init() {
     document.addEventListener("touchstart", function () { }, false);
-    fetchStats().then(
-        function (data) {
-            data.sort((a, b) => 0.5 - Math.random());
-
-            leftCard.setBgColor(data[0].TEAM);
-            leftCard.setLogo(data[0].TEAM);
-            leftCard.team.textContent = data[0].TEAM;
-            leftCard.playerImg.src = data[0].pic;
-            leftCard.playerName.textContent = data[0].Player;
-            console.log(data[0]);
-        }
-    );
-
-
+    
+    stats.sort((a, b) => 0.5 - Math.random());
+    
+    setCard("left", stats[0]);
+    setCard("right", stats[1]);
 }
 
 /* --------------------------------------------------------------------------------------------------
