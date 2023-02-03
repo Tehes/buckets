@@ -87,12 +87,12 @@ function compareValues(ev) {
         const rightScore = scores[1];
 
         if (leftValue > rightValue) {
-            leftScore.textContent = parseInt(leftScore.textContent) + 2;
+            leftScore.textContent = parseFloat(leftScore.textContent) + 2;
             values[0].classList.add("higher");
             values[1].classList.add("lower");
         }
         else if (rightValue > leftValue) {
-            rightScore.textContent = parseInt(rightScore.textContent) + 2;
+            rightScore.textContent = parseFloat(rightScore.textContent) + 2;
             values[1].classList.add("higher");
             values[0].classList.add("lower");
         }

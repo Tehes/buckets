@@ -92,11 +92,6 @@ header {
     margin: 3vmin 0 5vmin 0;
     padding: 20px;
     border-radius: var(--rounded-corners);
-}
-
-header h1 {
-    margin: 0;
-    padding: 0;
     font-size: 3vmin;
     text-transform: uppercase;
     font-weight: 900;
