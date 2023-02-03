@@ -178,6 +178,7 @@ main li {
     padding: 0.5vmin 0;
     color: var(--font-color);
     width: 20%;
+    transition: all 0.5s;
 }
 
 main li:nth-of-type(even):hover {
@@ -189,6 +190,14 @@ main li:nth-of-type(even):hover {
 
 main li:nth-of-type(odd) {
     color: #999;
+}
+
+.higher {
+    color:hsl(120, 100%, 30%);
+}
+
+.lower {
+    color:hsl(0, 100%, 30%);
 }
 
 /*

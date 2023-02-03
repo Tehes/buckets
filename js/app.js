@@ -77,19 +77,49 @@ String.prototype.shuffle = function () {
 function compareValues(ev) {
     if (Object.keys(ev.target.dataset).length > 0) {
         const category = Object.keys(ev.target.dataset)[0];
-        console.log(category);
+        const values = document.querySelectorAll(`[data-${category}]`);
+        values[1].textContent = values[1].dataset[category];
+        const leftValue = parseInt(values[0].textContent);
+        const rightValue = parseInt(values[1].textContent);
+
+        const scores = document.querySelectorAll("output");
+        const leftScore = scores[0];
+        const rightScore = scores[1];
+
+        if (leftValue > rightValue) {
+            leftScore.textContent = parseInt(leftScore.textContent) + 2;
+            values[0].classList.add("higher");
+            values[1].classList.add("lower");
+        }
+        else if (rightValue > leftValue) {
+            rightScore.textContent = parseInt(rightScore.textContent) + 2;
+            values[1].classList.add("higher");
+            values[0].classList.add("lower");
+        }
+        setTimeout(resetCategory.bind(null, values), 3000);
     }
+}
+
+function resetCategory(values) {
+    values[1].textContent = "---";
+    values[0].classList.remove("higher");
+    values[1].classList.remove("higher");
+    values[0].classList.remove("lower");
+    values[1].classList.remove("lower");
+    playCards();
+}
+
+function playCards() {
+    setCard("left", stats.shift());
+    setCard("right", stats.shift());
 }
 
 function init() {
     document.addEventListener("touchstart", function () { }, false);
+    document.addEventListener("click", compareValues, false);
 
     stats.sort((a, b) => 0.5 - Math.random());
-
-    setCard("left", stats[0]);
-    setCard("right", stats[1]);
-
-    document.addEventListener("click", compareValues, false);
+    playCards();
 }
 
 /* --------------------------------------------------------------------------------------------------
