@@ -96,7 +96,7 @@ function compareValues(ev) {
             values[1].classList.add("higher");
             values[0].classList.add("lower");
         }
-        setTimeout(resetCategory.bind(null, values), 3000);
+        setTimeout(resetCategory.bind(null, values), 1000);
     }
 }
 
@@ -106,7 +106,19 @@ function resetCategory(values) {
     values[1].classList.remove("higher");
     values[0].classList.remove("lower");
     values[1].classList.remove("lower");
-    playCards();
+	
+	const clock = document.querySelector(".clock");
+	const quarter = document.querySelector(".quarter");
+	const q = ["1st", "2nd", "3rd", "4th"];
+	let i = parseInt(quarter.textContent[0]) - 1;
+	clock.textContent = parseInt(clock.textContent) - 1;
+	if (clock.textContent === "0" && i < 3) {
+		clock.textContent = "12";
+		i++;
+		quarter.textContent = q[i];
+	}
+    
+	playCards();
 }
 
 function playCards() {
