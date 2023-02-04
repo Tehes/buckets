@@ -79,20 +79,20 @@ function compareValues(ev) {
         const category = Object.keys(ev.target.dataset)[0];
         const values = document.querySelectorAll(`[data-${category}]`);
         values[1].textContent = values[1].dataset[category];
-        const leftValue = parseInt(values[0].textContent);
-        const rightValue = parseInt(values[1].textContent);
+        const leftValue = parseFloat(values[0].textContent);
+        const rightValue = parseFloat(values[1].textContent);
 
         const scores = document.querySelectorAll("output");
         const leftScore = scores[0];
         const rightScore = scores[1];
 
         if (leftValue > rightValue) {
-            leftScore.textContent = parseFloat(leftScore.textContent) + 2;
+            leftScore.textContent = parseInt(leftScore.textContent) + 2;
             values[0].classList.add("higher");
             values[1].classList.add("lower");
         }
         else if (rightValue > leftValue) {
-            rightScore.textContent = parseFloat(rightScore.textContent) + 2;
+            rightScore.textContent = parseInt(rightScore.textContent) + 2;
             values[1].classList.add("higher");
             values[0].classList.add("lower");
         }
