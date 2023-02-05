@@ -154,7 +154,7 @@ function compareValues(ev) {
             values[1].classList.add("higher");
             values[0].classList.add("lower");
         }
-        setTimeout(resetCategory.bind(null, values), 3000);
+        setTimeout(resetCategory.bind(null, values), 2000);
 }
 
 function resetCategory(values) {
@@ -188,7 +188,7 @@ function checkClock() {
     else {
 		playCards();
 		if (active === "user") {
-			compareValues();
+			setTimeout(compareValues, 1500);
 		}
 		else if (active === "cpu") {
 			document.addEventListener("click", compareValues, false);
