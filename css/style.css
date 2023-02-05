@@ -188,11 +188,11 @@ main li:nth-of-type(odd) {
 }
 
 .higher {
-    color:hsl(120, 100%, 30%);
+    color:hsl(120, 100%, 30%) !important;
 }
 
 .lower {
-    color:hsl(0, 100%, 30%);
+    color:hsl(0, 100%, 30%) !important;
 }
 
 /*
