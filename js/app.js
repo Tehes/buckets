@@ -11,10 +11,66 @@ async function fetchStats() {
 Variables
 ---------------------------------------------------------------------------------------------------*/
 const stats = await fetchStats();
+const records = {
+    gp: recordValue("gp"),
+    min: recordValue("min"),
+    pts: recordValue("pts"),
+    fgp: recordValue("fg%"),
+    "3pm": recordValue("3pm"),
+    "3pp": recordValue("3p%"),
+    ftp: recordValue("ft%"),
+    reb: recordValue("reb"),
+    ast: recordValue("ast"),
+    stl: recordValue("stl"),
+    blk: recordValue("blk"),
+    eff: recordValue("eff")
+}
+
+console.table(records);
 
 /* --------------------------------------------------------------------------------------------------
 functions
 ---------------------------------------------------------------------------------------------------*/
+function recordValue(x) {
+    let highest = 0;
+    for (const player of stats) {
+        let current = parseFloat(player[x]);
+        if (current > highest) {
+            highest = current;
+        }
+    }
+    return highest;
+}
+
+function findbestValue() {
+    const values = document.querySelectorAll(".right li:nth-of-type(even)");
+    let bestValue = "";
+    let best = 0;
+    for (const val of values) {
+        const category = Object.keys(val.dataset)[0];
+        const current = parseFloat(Object.values(val.dataset)[0]);
+        const percentage = ((current / records[category]) * 100);  
+        if (percentage > best) {
+            best = percentage;
+            bestValue = category;
+        }
+    }
+    console.log(best, bestValue);    
+}
+
+String.prototype.shuffle = function () {
+    var chars = this.split("");
+    var charsAmount = chars.length;
+
+    for (var i = charsAmount - 1; i > 0; i--) {
+        var j = Math.floor(Math.random() * (i + 1));
+        var tmp = chars[i];
+        chars[i] = chars[j];
+        chars[j] = tmp;
+    }
+    return chars.join("");
+};
+
 function setCard(side, data) {
     const card = document.querySelector(`.${side}`);
     card.team = card.querySelector("h2");
@@ -60,20 +116,6 @@ function setCard(side, data) {
     card.querySelector("[data-eff]").dataset["eff"] = data["eff"];
 }
 
-
-String.prototype.shuffle = function () {
-    var chars = this.split("");
-    var charsAmount = chars.length;
-
-    for (var i = charsAmount - 1; i > 0; i--) {
-        var j = Math.floor(Math.random() * (i + 1));
-        var tmp = chars[i];
-        chars[i] = chars[j];
-        chars[j] = tmp;
-    }
-    return chars.join("");
-};
-
 function compareValues(ev) {
     if (Object.keys(ev.target.dataset).length > 0) {
         document.removeEventListener("click", compareValues, false);
@@ -109,24 +151,32 @@ function resetCategory(values) {
     values[0].classList.remove("lower");
     values[1].classList.remove("lower");
 	
-	const clock = document.querySelector(".clock");
+    checkClock();
+}
+
+function checkClock() {
+    const clock = document.querySelector(".clock");
 	const quarter = document.querySelector(".quarter");
 	const q = ["1st", "2nd", "3rd", "4th"];
 	let i = parseInt(quarter.textContent[0]) - 1;
 	clock.textContent = parseInt(clock.textContent) - 1;
-	if (clock.textContent === "0" && i < 3) {
+	
+    // if quarter ist over
+    if (clock.textContent === "0" && i < 3) {
 		clock.textContent = "12";
 		i++;
 		quarter.textContent = q[i];
 	}
+    // If game is over
     if (clock.textContent === "0" && i === 3) {
         console.log("game over");
     }
+    // game continues
     else {
         document.addEventListener("click", compareValues, false);
         playCards();
+        findbestValue();
     }
-    
 }
 
 function playCards() {
@@ -140,6 +190,7 @@ function init() {
 
     stats.sort((a, b) => 0.5 - Math.random());
     playCards();
+    findbestValue();
 }
 
 /* --------------------------------------------------------------------------------------------------
