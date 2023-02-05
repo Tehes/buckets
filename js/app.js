@@ -76,6 +76,8 @@ String.prototype.shuffle = function () {
 
 function compareValues(ev) {
     if (Object.keys(ev.target.dataset).length > 0) {
+        document.removeEventListener("click", compareValues, false);
+
         const category = Object.keys(ev.target.dataset)[0];
         const values = document.querySelectorAll(`[data-${category}]`);
         values[1].textContent = values[1].dataset[category];
@@ -117,8 +119,14 @@ function resetCategory(values) {
 		i++;
 		quarter.textContent = q[i];
 	}
+    if (clock.textContent === "0" && i === 3) {
+        console.log("game over");
+    }
+    else {
+        document.addEventListener("click", compareValues, false);
+        playCards();
+    }
     
-	playCards();
 }
 
 function playCards() {
