@@ -11,48 +11,50 @@ async function fetchStats() {
 Variables
 ---------------------------------------------------------------------------------------------------*/
 const stats = await fetchStats();
-const records = {
-    gp: recordValue("gp"),
-    min: recordValue("min"),
-    pts: recordValue("pts"),
-    fgp: recordValue("fg%"),
-    "3pm": recordValue("3pm"),
-    "3pp": recordValue("3p%"),
-    ftp: recordValue("ft%"),
-    reb: recordValue("reb"),
-    ast: recordValue("ast"),
-    stl: recordValue("stl"),
-    blk: recordValue("blk"),
-    eff: recordValue("eff")
+const average = {
+    gp: averageValue("gp"),
+    min: averageValue("min"),
+    pts: averageValue("pts"),
+    fgp: averageValue("fg%"),
+    "3pm": averageValue("3pm"),
+    "3pp": averageValue("3p%"),
+    ftp: averageValue("ft%"),
+    reb: averageValue("reb"),
+    ast: averageValue("ast"),
+    stl: averageValue("stl"),
+    blk: averageValue("blk"),
+    eff: averageValue("eff")
 }
 
-console.table(records);
+console.table(average);
 
 /* --------------------------------------------------------------------------------------------------
 functions
 ---------------------------------------------------------------------------------------------------*/
-function recordValue(x) {
-    let highest = 0;
+function averageValue(x) {
+    let value = 0;
     for (const player of stats) {
-        let current = parseFloat(player[x]);
-        if (current > highest) {
-            highest = current;
-        }
+        value += parseFloat(player[x]);
     }
-    return highest;
+    const average = value.toFixed() / stats.length;
+    return average;
 }
 
 function findbestValue() {
     const values = document.querySelectorAll(".right li:nth-of-type(even)");
-    let bestValue = "";
-    let best = 0;
+    let bestValue = ["", "", ""];
+    let best = [0, 0, 0];
     for (const val of values) {
         const category = Object.keys(val.dataset)[0];
         const current = parseFloat(Object.values(val.dataset)[0]);
-        const percentage = ((current / records[category]) * 100);  
-        if (percentage > best) {
-            best = percentage;
-            bestValue = category;
+        const percentage = ((current / average[category]) * 100);  
+        if (percentage > best[0]) {
+            best[2] = best[1];
+            best[1] = best[0];
+            best[0] = percentage;
+            bestValue[2] = bestValue[1];
+            bestValue[1] = bestValue[0];
+            bestValue[0] = category;
         }
     }
     console.log(best, bestValue);    
