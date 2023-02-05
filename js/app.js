@@ -117,12 +117,12 @@ function setCard(side, data) {
 }
 
 function compareValues(ev) {
-	document.removeEventListener("click", compareValues, false);
 	let category;
 	
 	// if user clicked on card
 	if (ev) {
 		if (Object.keys(ev.target.dataset).length > 0) {
+			document.removeEventListener("click", compareValues, false);
 			category = Object.keys(ev.target.dataset)[0];
 			active = "user";
 		}

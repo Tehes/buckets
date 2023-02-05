@@ -231,4 +231,7 @@ MEDIA QUERIES
 		--bg-color: hsl(0, 0%, 20%);
 		--font-color: hsl(0, 0%, 90%);
 	}
+	main li:nth-of-type(even):hover {
+		color: var(--bg-color);
+	}
 }
