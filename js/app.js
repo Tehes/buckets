@@ -26,8 +26,6 @@ const average = {
     eff: averageValue("eff")
 }
 
-console.table(average);
-
 /* --------------------------------------------------------------------------------------------------
 functions
 ---------------------------------------------------------------------------------------------------*/
@@ -41,23 +39,26 @@ function averageValue(x) {
 }
 
 function findbestValue() {
-    const values = document.querySelectorAll(".right li:nth-of-type(even)");
-    let bestValue = ["", "", ""];
-    let best = [0, 0, 0];
-    for (const val of values) {
-        const category = Object.keys(val.dataset)[0];
-        const current = parseFloat(Object.values(val.dataset)[0]);
-        const percentage = ((current / average[category]) * 100);  
-        if (percentage > best[0]) {
-            best[2] = best[1];
-            best[1] = best[0];
-            best[0] = percentage;
-            bestValue[2] = bestValue[1];
-            bestValue[1] = bestValue[0];
-            bestValue[0] = category;
-        }
-    }
-    console.log(best, bestValue);    
+    const valuesEl = document.querySelectorAll(".right li:nth-of-type(even)");
+    let values = [...valuesEl]; // convert nodelist to array
+    
+    values.sort(function(a, b) { 
+        const categoryA = Object.keys(a.dataset)[0];
+        const categoryB = Object.keys(b.dataset)[0];
+
+        const currentA = parseFloat(Object.values(a.dataset)[0]);
+        const currentB = parseFloat(Object.values(b.dataset)[0]);
+
+        const percentageA = ((currentA / average[categoryA]) * 100); 
+        const percentageB = ((currentB / average[categoryB]) * 100);   
+
+        return percentageB - percentageA;
+    });
+    console.log(
+        Object.keys(values[0].dataset)[0], ((parseFloat(Object.values(values[0].dataset)[0]) / average[Object.keys(values[0].dataset)[0]]) * 100), 
+        Object.keys(values[1].dataset)[0], ((parseFloat(Object.values(values[1].dataset)[0]) / average[Object.keys(values[1].dataset)[0]]) * 100), 
+        Object.keys(values[2].dataset)[0], ((parseFloat(Object.values(values[2].dataset)[0]) / average[Object.keys(values[2].dataset)[0]]) * 100)
+    );    
 }
 
 String.prototype.shuffle = function () {
