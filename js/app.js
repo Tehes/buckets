@@ -24,7 +24,8 @@ const average = {
     stl: averageValue("stl"),
     blk: averageValue("blk"),
     eff: averageValue("eff")
-}
+};
+let active;
 
 /* --------------------------------------------------------------------------------------------------
 functions
@@ -54,11 +55,7 @@ function findbestValue() {
 
         return percentageB - percentageA;
     });
-    console.log(
-        Object.keys(values[0].dataset)[0], ((parseFloat(Object.values(values[0].dataset)[0]) / average[Object.keys(values[0].dataset)[0]]) * 100), 
-        Object.keys(values[1].dataset)[0], ((parseFloat(Object.values(values[1].dataset)[0]) / average[Object.keys(values[1].dataset)[0]]) * 100), 
-        Object.keys(values[2].dataset)[0], ((parseFloat(Object.values(values[2].dataset)[0]) / average[Object.keys(values[2].dataset)[0]]) * 100)
-    );    
+	return Object.keys(values[0].dataset)[0];
 }
 
 String.prototype.shuffle = function () {
@@ -120,18 +117,32 @@ function setCard(side, data) {
 }
 
 function compareValues(ev) {
-    if (Object.keys(ev.target.dataset).length > 0) {
-        document.removeEventListener("click", compareValues, false);
+	document.removeEventListener("click", compareValues, false);
+	let category;
+	
+	// if user clicked on card
+	if (ev) {
+		if (Object.keys(ev.target.dataset).length > 0) {
+			category = Object.keys(ev.target.dataset)[0];
+			active = "user";
+		}
+		else {
+			return;
+		}
+	}
+	else {
+		category = findbestValue();
+		active = "cpu";
+	}
+	
+    const values = document.querySelectorAll(`[data-${category}]`);
+    values[1].textContent = values[1].dataset[category];
+    const leftValue = parseFloat(values[0].textContent);
+    const rightValue = parseFloat(values[1].textContent);
 
-        const category = Object.keys(ev.target.dataset)[0];
-        const values = document.querySelectorAll(`[data-${category}]`);
-        values[1].textContent = values[1].dataset[category];
-        const leftValue = parseFloat(values[0].textContent);
-        const rightValue = parseFloat(values[1].textContent);
-
-        const scores = document.querySelectorAll("output");
-        const leftScore = scores[0];
-        const rightScore = scores[1];
+    const scores = document.querySelectorAll("output");
+    const leftScore = scores[0];
+    const rightScore = scores[1];
 
         if (leftValue > rightValue) {
             leftScore.textContent = parseInt(leftScore.textContent) + 2;
@@ -143,8 +154,7 @@ function compareValues(ev) {
             values[1].classList.add("higher");
             values[0].classList.add("lower");
         }
-        setTimeout(resetCategory.bind(null, values), 1000);
-    }
+        setTimeout(resetCategory.bind(null, values), 3000);
 }
 
 function resetCategory(values) {
@@ -176,9 +186,13 @@ function checkClock() {
     }
     // game continues
     else {
-        document.addEventListener("click", compareValues, false);
-        playCards();
-        findbestValue();
+		playCards();
+		if (active === "user") {
+			compareValues();
+		}
+		else if (active === "cpu") {
+			document.addEventListener("click", compareValues, false);
+		}     
     }
 }
 
@@ -193,7 +207,6 @@ function init() {
 
     stats.sort((a, b) => 0.5 - Math.random());
     playCards();
-    findbestValue();
 }
 
 /* --------------------------------------------------------------------------------------------------
