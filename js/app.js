@@ -187,6 +187,13 @@ function checkClock() {
     // game continues
     else {
 		playCards();
+        const cards = document.querySelectorAll("section");
+        const players = document.querySelectorAll(".players");
+        cards[0].classList.toggle("active");
+        cards[1].classList.toggle("active");
+        players[0].classList.toggle("active");
+        players[1].classList.toggle("active");
+
 		if (active === "user") {
 			setTimeout(compareValues, 1500);
 		}

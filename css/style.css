@@ -3,6 +3,7 @@
   --font-color: hsl(0, 0%, 25%);
   --rounded-corners: 10px;
   --drop-shadow: 1px 1px 10px 3px rgba(0, 0, 0, 0.2);
+  --active-shadow: 1px 1px 20px 6px rgba(0, 0, 0, 0.4);
 
   --ATL: #e03a3e;
   --BKN: #000000;
@@ -115,6 +116,11 @@ section {
     background-color: var(--bg-color);
     border-radius: var(--rounded-corners);
     box-shadow: var(--drop-shadow);
+    transition: all 0.5s;
+}
+
+section.active {
+    box-shadow: var(--active-shadow);
 }
 
 .img-bg {
@@ -203,18 +209,30 @@ ASIDE
 
 aside {
     margin-top: 5vh;
-    width: 30vmin;
     padding: 1vmin;
     background-color: var(--bg-color);
     border-radius: var(--rounded-corners);
     display: flex;
     justify-content: space-around;
     align-items: center;
+    gap: 3vmin;    
+}
+
+.players { 
+    color: #666;
+    font-size: 3vmin;
+    font-weight: 500;
+}
+
+.players.active {
+    color: #333;
+    font-weight: 700;
 }
 
 aside output {
     font-size: 10vmin;
     color: #bbb;
+    line-height: 1;
     text-shadow: 1px 1px #999;
     font-weight: 800;
     line-height: 1;
