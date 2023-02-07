@@ -214,7 +214,6 @@ aside {
     display: flex;
     justify-content: space-around;
     align-items: center;
-    gap: 3vmin; 
     overflow: hidden;
 }
 
@@ -234,7 +233,7 @@ aside output {
     flex-direction: column;
     align-items: center;
     height: 10vmin;
-    width: 10vmin;   
+    width: 14vmin;
 }
 
 aside output span {

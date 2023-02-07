@@ -211,8 +211,8 @@ function playCards() {
 }
 
 function updateScore(ev) {
-    const numnbers = ev.target.querySelectorAll("span");
-    numnbers[0].textContent = numnbers[1].textContent;
+    const numbers = ev.target.querySelectorAll("span");
+    numbers[0].textContent = numbers[1].textContent;
     ev.target.classList.remove("animate");
 }
 
