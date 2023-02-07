@@ -4,6 +4,11 @@
   --rounded-corners: 10px;
   --drop-shadow: 1px 1px 10px 3px rgba(0, 0, 0, 0.2);
   --active-shadow: 1px 1px 20px 6px rgba(0, 0, 0, 0.4);
+  --text-shadow: 1px 1px #666;
+  --grey: #bbb;
+  --light-grey: #ddd;
+  --lighter-grey: #eee;
+  --dark-grey: #999;
 
   --ATL: #e03a3e;
   --BKN: #000000;
@@ -90,7 +95,7 @@ HEADER
 header {
     background-color: var(--bg-color);
     margin: 3vmin 0 5vmin 0;
-    padding: 20px;
+    padding: 1vmin;
     border-radius: var(--rounded-corners);
     font-size: 3vmin;
     text-transform: uppercase;
@@ -124,7 +129,7 @@ section.active {
 
 .img-bg {
     height: 40%;  
-    background: linear-gradient(90deg, #bbb, #ddd);
+    background: linear-gradient(90deg, var(--grey), var(--light-grey));
     border-radius: var(--rounded-corners) var(--rounded-corners) 0 0;
     display: flex;
     justify-content: center;
@@ -143,7 +148,7 @@ section.active {
     transform: rotate(-90deg);
     font-size: 8vmin;
     font-weight: 900;
-    color: #ddd;
+    color: var(--light-grey);
     margin: 0;
     padding: 0;
     width: 19vmin;
@@ -157,8 +162,8 @@ main h1 {
     margin: 0.7vmin 2vmin 0 2vmin;
     font-size: 4vmin;
     text-transform: uppercase;
-    color: #bbb;
-    text-shadow: 1px 1px #666;
+    color: var(--grey);
+    text-shadow: var(--text-shadow);
     font-weight: 800;
     line-height: 1.1;
 }
@@ -182,14 +187,14 @@ main li {
 }
 
 main li:nth-of-type(even):hover {
-    background-color: #eee;
+    background-color: var(--light-grey);
     text-align: center;
     border-radius: var(--rounded-corners);
     cursor: pointer;
 }
 
 main li:nth-of-type(odd) {
-    color: #999;
+    color: var(--dark-grey);
 }
 
 .higher {
@@ -218,14 +223,13 @@ aside {
 }
 
 .players { 
-    color: #666;
+    color: var(--dark-grey);
     font-size: 3vmin;
-    font-weight: 500;
+    font-weight: 700;
 }
 
 .players.active {
-    color: #333;
-    font-weight: 700;
+    color: var(--font-color);
 }
 
 aside output {
@@ -238,11 +242,10 @@ aside output {
 
 aside output span {
     font-size: 10vmin;
-    color: #bbb;
+    color: var(--grey);
     line-height: 1;
-    text-shadow: 1px 1px #999;
+    text-shadow: var(--text-shadow);
     font-weight: 800;
-    line-height: 1;
 }
 
 .animate {
@@ -268,6 +271,7 @@ MEDIA QUERIES
 	:root {
 		--bg-color: hsl(0, 0%, 20%);
 		--font-color: hsl(0, 0%, 90%);
+		--text-shadow: 1px 1px #000;
 	}
 	main li:nth-of-type(even):hover {
 		color: var(--bg-color);
