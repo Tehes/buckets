@@ -140,17 +140,19 @@ function compareValues(ev) {
     const leftValue = parseFloat(values[0].textContent);
     const rightValue = parseFloat(values[1].textContent);
 
-    const scores = document.querySelectorAll("output");
-    const leftScore = scores[0];
-    const rightScore = scores[1];
+    const scores = document.querySelectorAll("output span");
+    const leftScore = scores[1];
+    const rightScore = scores[3];
 
         if (leftValue > rightValue) {
             leftScore.textContent = parseInt(leftScore.textContent) + 2;
+            document.querySelectorAll("output")[0].classList.add("animate");
             values[0].classList.add("higher");
             values[1].classList.add("lower");
         }
         else if (rightValue > leftValue) {
             rightScore.textContent = parseInt(rightScore.textContent) + 2;
+            document.querySelectorAll("output")[1].classList.add("animate");
             values[1].classList.add("higher");
             values[0].classList.add("lower");
         }
@@ -208,9 +210,16 @@ function playCards() {
     setCard("right", stats.shift());
 }
 
+function updateScore(ev) {
+    const numnbers = ev.target.querySelectorAll("span");
+    numnbers[0].textContent = numnbers[1].textContent;
+    ev.target.classList.remove("animate");
+}
+
 function init() {
     document.addEventListener("touchstart", function () { }, false);
     document.addEventListener("click", compareValues, false);
+    document.addEventListener("animationend", updateScore, false);
 
     stats.sort((a, b) => 0.5 - Math.random());
     playCards();

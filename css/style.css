@@ -77,7 +77,6 @@ body {
     justify-content: flex-start;
     align-items: center;
     flex-direction: column;
-    transition: all 0.5s;
 }
 
 
@@ -116,7 +115,7 @@ section {
     background-color: var(--bg-color);
     border-radius: var(--rounded-corners);
     box-shadow: var(--drop-shadow);
-    transition: all 0.5s;
+    transition: box-shadow 0.5s;
 }
 
 section.active {
@@ -179,7 +178,7 @@ main li {
     padding: 0.5vmin 0;
     color: var(--font-color);
     width: 20%;
-    transition: all 0.5s;
+    transition: color 0.5s;
 }
 
 main li:nth-of-type(even):hover {
@@ -215,7 +214,8 @@ aside {
     display: flex;
     justify-content: space-around;
     align-items: center;
-    gap: 3vmin;    
+    gap: 3vmin; 
+    overflow: hidden;
 }
 
 .players { 
@@ -230,12 +230,33 @@ aside {
 }
 
 aside output {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 10vmin;
+    width: 10vmin;   
+}
+
+aside output span {
     font-size: 10vmin;
     color: #bbb;
     line-height: 1;
     text-shadow: 1px 1px #999;
     font-weight: 800;
     line-height: 1;
+}
+
+.animate {
+    animation: slideUp 1s;
+}
+
+@keyframes slideUp {
+    0% {
+        transform: translateY(0%);
+    }
+    100% {
+        transform: translateY(-100%);
+    }
 }
 
 /*
