@@ -75,7 +75,7 @@ body {
 	color: var(--font-color);
 	font-size: 100%;
     font-family: 'Kanit', sans-serif;
-    min-height: 100vh;
+    min-height: 100dvh;
     /* mobile viewport bug fix */
     min-height: -webkit-fill-available;
     display: flex;
@@ -286,6 +286,7 @@ MEDIA QUERIES
         linear-gradient(180deg, #fff 50.2%, var(--bg-right) 50.2%);
         background-size: 15%, 15%, 100%, 100%;
 		justify-content: space-around;
+		gap: 4min;
 	}
 	
 	header {
@@ -311,7 +312,7 @@ MEDIA QUERIES
 	main {
 		flex-direction: column;
 		align-items: center;
-		justify-content: center;
+		justify-content: space-around;
 		gap: 6vmin;
 	}
 	
