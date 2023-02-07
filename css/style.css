@@ -312,7 +312,7 @@ MEDIA QUERIES
 		flex-direction: column;
 		align-items: center;
 		justify-content: center;
-		gap: 12vmin;
+		gap: 6vmin;
 	}
 	
 	section {
@@ -322,7 +322,7 @@ MEDIA QUERIES
 	
 	main li {
     	font-size: 4vmin;
-    	padding: 0.4vmin 0;
+    	padding: 0.3vmin 0;
     	width: 20%;
 	}
 	
