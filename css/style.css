@@ -200,6 +200,11 @@ main li:nth-of-type(odd) {
     color: hsl(0, 100%, 30%) !important;
 }
 
+abbr {
+    text-decoration: none;
+    position: relative;
+}
+
 
 /*
 -------------------------------------------------------------------
