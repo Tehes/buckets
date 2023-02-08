@@ -280,7 +280,7 @@ MEDIA QUERIES
 
 @media only screen and (max-width: 480px) {
 	section {
-    height: 45vh;
+    height: 55vh;
     background-color: var(--bg-color);
     border-radius: var(--rounded-corners);
     box-shadow: var(--drop-shadow);
@@ -288,7 +288,7 @@ MEDIA QUERIES
 }
 
 .img-bg {
-    height: 20%;  
+    height: 13vh;  
     background: linear-gradient(90deg, var(--grey), var(--light-grey));
     border-radius: var(--rounded-corners) var(--rounded-corners) 0 0;
     display: flex;
@@ -298,8 +298,13 @@ MEDIA QUERIES
     position: relative;
 }
 
+.img-bg img  {
+    margin: 0vmin;
+}
+
 main h1 {
     font-size: 5vmin;
+	margin: 1.5vmin 4vmin 0 4vmin;
 }
 	
 	main li {
