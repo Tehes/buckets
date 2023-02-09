@@ -42,23 +42,23 @@ function averageValue(x) {
 function findbestValue() {
     const valuesEl = document.querySelectorAll(".right li:nth-of-type(even)");
     let values = [...valuesEl]; // convert nodelist to array
-    
-    values.sort(function(a, b) { 
+
+    values.sort(function(a, b) {
         const categoryA = Object.keys(a.dataset)[0];
         const categoryB = Object.keys(b.dataset)[0];
 
         const currentA = parseFloat(Object.values(a.dataset)[0]);
         const currentB = parseFloat(Object.values(b.dataset)[0]);
 
-        const percentageA = ((currentA / average[categoryA]) * 100); 
-        const percentageB = ((currentB / average[categoryB]) * 100);   
+        const percentageA = ((currentA / average[categoryA]) * 100);
+        const percentageB = ((currentB / average[categoryB]) * 100);
 
         return percentageB - percentageA;
     });
-	return Object.keys(values[0].dataset)[0];
+    return Object.keys(values[0].dataset)[0];
 }
 
-String.prototype.shuffle = function () {
+String.prototype.shuffle = function() {
     var chars = this.split("");
     var charsAmount = chars.length;
 
@@ -117,24 +117,22 @@ function setCard(side, data) {
 }
 
 function compareValues(ev) {
-	let category;
-	
-	// if user clicked on card
-	if (ev) {
-		if (Object.keys(ev.target.dataset).length > 0) {
-			document.removeEventListener("click", compareValues, false);
-			category = Object.keys(ev.target.dataset)[0];
-			active = "user";
-		}
-		else {
-			return;
-		}
-	}
-	else {
-		category = findbestValue();
-		active = "cpu";
-	}
-	
+    let category;
+
+    // if user clicked on card
+    if (ev) {
+        if (Object.keys(ev.target.dataset).length > 0) {
+            document.removeEventListener("click", compareValues, false);
+            category = Object.keys(ev.target.dataset)[0];
+            active = "user";
+        } else {
+            return;
+        }
+    } else {
+        category = findbestValue();
+        active = "cpu";
+    }
+
     const values = document.querySelectorAll(`[data-${category}]`);
     values[1].textContent = values[1].dataset[category];
     const leftValue = parseFloat(values[0].textContent);
@@ -144,19 +142,18 @@ function compareValues(ev) {
     const leftScore = scores[1];
     const rightScore = scores[3];
 
-        if (leftValue > rightValue) {
-            leftScore.textContent = parseInt(leftScore.textContent) + 2;
-            document.querySelectorAll("output")[0].classList.add("animate");
-            values[0].classList.add("higher");
-            values[1].classList.add("lower");
-        }
-        else if (rightValue > leftValue) {
-            rightScore.textContent = parseInt(rightScore.textContent) + 2;
-            document.querySelectorAll("output")[1].classList.add("animate");
-            values[1].classList.add("higher");
-            values[0].classList.add("lower");
-        }
-        setTimeout(resetCategory.bind(null, values), 2000);
+    if (leftValue > rightValue) {
+        leftScore.textContent = parseInt(leftScore.textContent) + 2;
+        document.querySelectorAll("output")[0].classList.add("animate");
+        values[0].classList.add("higher");
+        values[1].classList.add("lower");
+    } else if (rightValue > leftValue) {
+        rightScore.textContent = parseInt(rightScore.textContent) + 2;
+        document.querySelectorAll("output")[1].classList.add("animate");
+        values[1].classList.add("higher");
+        values[0].classList.add("lower");
+    }
+    setTimeout(resetCategory.bind(null, values), 2000);
 }
 
 function resetCategory(values) {
@@ -165,30 +162,37 @@ function resetCategory(values) {
     values[1].classList.remove("higher");
     values[0].classList.remove("lower");
     values[1].classList.remove("lower");
-	
+
     checkClock();
 }
 
 function checkClock() {
     const clock = document.querySelector(".clock");
-	const quarter = document.querySelector(".quarter");
-	const q = ["1st", "2nd", "3rd", "4th"];
-	let i = parseInt(quarter.textContent[0]) - 1;
-	clock.textContent = parseInt(clock.textContent) - 1;
-	
+    const quarter = document.querySelector(".quarter");
+    const q = ["1st", "2nd", "3rd", "4th"];
+    let i = parseInt(quarter.textContent[0]) - 1;
+    clock.textContent = parseInt(clock.textContent) - 1;
+
     // if quarter ist over
     if (clock.textContent === "0" && i < 3) {
-		clock.textContent = "12";
-		i++;
-		quarter.textContent = q[i];
-	}
+        clock.textContent = "12";
+        i++;
+        quarter.textContent = q[i];
+    }
     // If game is over
     if (clock.textContent === "0" && i === 3) {
-        console.log("game over");
+        const scores = document.querySelectorAll("output span");
+        const leftScore = parseInt(scores[1].textContent);
+        const rightScore = parseInt(scores[3].textContent);
+        if (leftScore > rightScore) {
+            alert("You win!");
+        } else if (rightScore > leftScore) {
+            alert("You lose!");
+        }
     }
     // game continues
     else {
-		playCards();
+        playCards();
         const cards = document.querySelectorAll("section");
         const players = document.querySelectorAll(".players");
         cards[0].classList.toggle("active");
@@ -196,12 +200,11 @@ function checkClock() {
         players[0].classList.toggle("active");
         players[1].classList.toggle("active");
 
-		if (active === "user") {
-			setTimeout(compareValues, 1500);
-		}
-		else if (active === "cpu") {
-			document.addEventListener("click", compareValues, false);
-		}     
+        if (active === "user") {
+            setTimeout(compareValues, 1500);
+        } else if (active === "cpu") {
+            document.addEventListener("click", compareValues, false);
+        }
     }
 }
 
@@ -217,7 +220,7 @@ function updateScore(ev) {
 }
 
 function init() {
-    document.addEventListener("touchstart", function () { }, false);
+    document.addEventListener("touchstart", function() {}, false);
     document.addEventListener("click", compareValues, false);
     document.addEventListener("animationend", updateScore, false);
 
