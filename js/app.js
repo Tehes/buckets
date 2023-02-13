@@ -58,19 +58,6 @@ function findbestValue() {
     return Object.keys(values[0].dataset)[0];
 }
 
-String.prototype.shuffle = function() {
-    var chars = this.split("");
-    var charsAmount = chars.length;
-
-    for (var i = charsAmount - 1; i > 0; i--) {
-        var j = Math.floor(Math.random() * (i + 1));
-        var tmp = chars[i];
-        chars[i] = chars[j];
-        chars[j] = tmp;
-    }
-    return chars.join("");
-};
-
 function setCard(side, data) {
     const card = document.querySelector(`.${side}`);
     card.team = card.querySelector("h2");
@@ -128,7 +115,9 @@ function compareValues(ev) {
         } else {
             return;
         }
-    } else {
+    }
+    // else CPU plays 
+    else {
         category = findbestValue();
         active = "cpu";
     }
