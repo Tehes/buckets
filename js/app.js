@@ -11,20 +11,11 @@ async function fetchStats() {
 Variables
 ---------------------------------------------------------------------------------------------------*/
 const stats = await fetchStats();
-const average = {
-    gp: averageValue("gp"),
-    min: averageValue("min"),
-    pts: averageValue("pts"),
-    fgp: averageValue("fg%"),
-    "3pm": averageValue("3pm"),
-    "3pp": averageValue("3p%"),
-    ftp: averageValue("ft%"),
-    reb: averageValue("reb"),
-    ast: averageValue("ast"),
-    stl: averageValue("stl"),
-    blk: averageValue("blk"),
-    eff: averageValue("eff")
-};
+const categories = ["gp", "min", "pts", "fgp", "3pm", "3pp", "ftp", "reb", "ast", "stl", "blk", "eff"];
+const average = {};
+categories.forEach(function(category) {
+    average[category] = averageValue(category);
+});
 let active;
 
 /* --------------------------------------------------------------------------------------------------
@@ -76,31 +67,14 @@ function setCard(side, data) {
     card.team.textContent = data.team;
     // set values 
     if (side === "left") {
-        card.querySelector("[data-gp]").textContent = data["gp"];
-        card.querySelector("[data-min]").textContent = data["min"];
-        card.querySelector("[data-pts]").textContent = data["pts"];
-        card.querySelector("[data-fgp]").textContent = data["fg%"];
-        card.querySelector("[data-3pm]").textContent = data["3pm"];
-        card.querySelector("[data-3pp]").textContent = data["3p%"];
-        card.querySelector("[data-ftp]").textContent = data["ft%"];
-        card.querySelector("[data-reb]").textContent = data["reb"];
-        card.querySelector("[data-ast]").textContent = data["ast"];
-        card.querySelector("[data-stl]").textContent = data["stl"];
-        card.querySelector("[data-blk]").textContent = data["blk"];
-        card.querySelector("[data-eff]").textContent = data["eff"];
+        categories.forEach(function(category) {
+            card.querySelector(`[data-${category}]`).textContent = data[category];
+        });
     }
-    card.querySelector("[data-gp]").dataset["gp"] = data["gp"];
-    card.querySelector("[data-min]").dataset["min"] = data["min"];
-    card.querySelector("[data-pts]").dataset["pts"] = data["pts"];
-    card.querySelector("[data-fgp]").dataset["fgp"] = data["fg%"];
-    card.querySelector("[data-3pm]").dataset["3pm"] = data["3pm"];
-    card.querySelector("[data-3pp]").dataset["3pp"] = data["3p%"];
-    card.querySelector("[data-ftp]").dataset["ftp"] = data["ft%"];
-    card.querySelector("[data-reb]").dataset["reb"] = data["reb"];
-    card.querySelector("[data-ast]").dataset["ast"] = data["ast"];
-    card.querySelector("[data-stl]").dataset["stl"] = data["stl"];
-    card.querySelector("[data-blk]").dataset["blk"] = data["blk"];
-    card.querySelector("[data-eff]").dataset["eff"] = data["eff"];
+    categories.forEach(function(category) {
+        card.querySelector(`[data-${category}]`).dataset[category] = data[category];
+        
+    });
 }
 
 function compareValues(ev) {

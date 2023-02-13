@@ -32,7 +32,7 @@ import puppeteer from 'puppeteer';
             const playerObject = {};
             const cells = rows[i].querySelectorAll("td");
             for (let j = 0; j < cells.length; j++) {
-                playerObject[props[j].textContent.toLowerCase().trim()] = cells[j].textContent.trim();
+                playerObject[props[j].textContent.toLowerCase().replace("%", "p").trim()] = cells[j].textContent.trim();
                 playerObject.id = cells[1].querySelector("a").href.replace(/[^0-9]/g, "");
                 playerObject.pic = `https://cdn.nba.com/headshots/nba/latest/1040x760/${playerObject.id}.png`;
             }
