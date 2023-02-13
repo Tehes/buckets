@@ -116,15 +116,14 @@ function compareValues(ev) {
         values[1].classList.add("higher");
         values[0].classList.add("lower");
     }
+
     setTimeout(resetCategory.bind(null, values), 2000);
 }
 
 function resetCategory(values) {
     values[1].textContent = "---";
-    values[0].classList.remove("higher");
-    values[1].classList.remove("higher");
-    values[0].classList.remove("lower");
-    values[1].classList.remove("lower");
+    values[0].classList.remove("higher", "lower");
+    values[1].classList.remove("higher", "lower");
 
     checkClock();
 }
