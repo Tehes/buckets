@@ -12,7 +12,7 @@ import puppeteer from 'puppeteer';
     const page = await browser.newPage();
 
     // Go to your site
-    await page.goto('https://www.nba.com/stats/leaders?StatCategory=EFF&Season=2021-22');
+    await page.goto('https://www.nba.com/stats/leaders?StatCategory=EFF&Season=2022-23');
 
     // scrape the data 
     const data = await page.evaluate(() => {
