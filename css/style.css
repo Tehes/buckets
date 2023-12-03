@@ -214,9 +214,15 @@ ASIDE
 
 aside {
     margin-top: 5vh;
-    padding: 1vmin;
     background-color: var(--bg-color);
-    border-radius: var(--rounded-corners);
+    border-radius: var(--rounded-corners);  
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+}
+
+.scoreboard {
+    padding: 1vmin;
     display: flex;
     justify-content: space-around;
     align-items: center;
@@ -247,6 +253,24 @@ aside output span {
     line-height: 1;
     text-shadow: var(--text-shadow);
     font-weight: 800;
+}
+
+#credit {
+    font-size: 0.8rem;
+    padding: 0.5vmin;
+    display: flex;
+    justify-content: center;
+    background-color: var(--grey);
+    border-radius: 0 0 var(--rounded-corners) var(--rounded-corners);
+}
+
+a:link, a:active, a:visited {
+    text-decoration: none;
+    color: var(--font-color);
+}
+
+a:hover {
+    text-decoration: underline;
 }
 
 .animate {
