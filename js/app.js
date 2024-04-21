@@ -46,7 +46,9 @@ function findbestValue() {
 
         return percentageB - percentageA;
     });
-    return Object.keys(values[0].dataset)[0];
+    //create a random number between 1 and 3 to vary to difficulty
+    const randInt = Math.floor(Math.random() * (3 - 1 + 1)) + 1;
+    return Object.keys(values[randInt].dataset)[0];
 }
 
 function setCard(side, data) {
