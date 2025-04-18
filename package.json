@@ -18,6 +18,8 @@
   },
   "homepage": "https://github.com/Tehes/nba-top-trumps#readme",
   "dependencies": {
-    "puppeteer": "^19.6.2"
+    "lines-and-columns": "^2.0.4",
+    "puppeteer": "^24.6.1",
+    "yargs": "^17.7.2"
   }
 }

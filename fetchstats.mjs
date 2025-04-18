@@ -7,14 +7,18 @@ import puppeteer from 'puppeteer';
 (async () => {
     // Launch the browser
     const browser = await puppeteer.launch();
+    console.log('Browser gestartet');
 
     // Create a page
     const page = await browser.newPage();
+    console.log('Seite geöffnet');
 
     // Go to your site
-    await page.goto('https://www.nba.com/stats/leaders?StatCategory=EFF&Season=2023-24');
+    await page.goto('https://www.nba.com/stats/leaders?Season=2024-25&SeasonType=Regular%20Season&StatCategory=EFF');
+    console.log('URL geladen');
 
     // scrape the data 
+    console.log('Beginne mit Scraping');
     const data = await page.evaluate(() => {
         const example = document.querySelectorAll('select')[5];
         const example_options = example.querySelectorAll('option');
@@ -40,12 +44,15 @@ import puppeteer from 'puppeteer';
         }
         return arr;
     });
+    console.log(`Scraping fertig, ${data.length} Datensätze gefunden`);
 
     // write the JSON file to disk
+    console.log('Schreibe data.json...');
     fs.writeFile('data.json', JSON.stringify(data), function (err) {
         if (err) { console.log(err); }
     });
 
     // Close browser.
     await browser.close();
+    console.log('Browser geschlossen');
 })();
