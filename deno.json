@@ -1,0 +1,5 @@
+{
+    "tasks": {
+        "scrape": "deno run --allow-net --allow-write fetchdeno.js"
+    }
+}
