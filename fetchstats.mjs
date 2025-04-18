@@ -20,33 +20,42 @@ import puppeteer from 'puppeteer';
         // Go to your site
         await page.goto('https://www.nba.com/stats/leaders?Season=2024-25&SeasonType=Regular%20Season&StatCategory=EFF');
         console.log('URL geladen');
-
-        // scrape the data 
-        console.log('Beginne mit Scraping');
-        const data = await page.evaluate(() => {
-            const example = document.querySelectorAll('select')[5];
-            const example_options = example.querySelectorAll('option');
-
-            example_options[0].selected = true;
-            const event = new Event('change', { bubbles: true });
-            example.dispatchEvent(event);
-
-
-            const props = document.querySelectorAll("table th");
-            const rows = document.querySelectorAll("table tr");
-            const arr = [];
-
-            for (let i = 1; i < rows.length; i++) {
-                const playerObject = {};
-                const cells = rows[i].querySelectorAll("td");
-                for (let j = 0; j < cells.length; j++) {
-                    playerObject[props[j].textContent.toLowerCase().replace("%", "p").trim()] = cells[j].textContent.trim();
-                    playerObject.id = cells[1].querySelector("a").href.replace(/[^0-9]/g, "");
-                    playerObject.pic = `https://cdn.nba.com/headshots/nba/latest/1040x760/${playerObject.id}.png`;
+        // Rows-per-Page Dropdown auf "All" stellen (dynamisch finden)
+        await page.evaluate(() => {
+            const selects = Array.from(document.querySelectorAll('select'));
+            for (const sel of selects) {
+                const firstOpt = sel.querySelector('option[value="-1"]');
+                if (firstOpt && firstOpt.textContent.trim() === 'All') {
+                    sel.value = '-1';
+                    sel.dispatchEvent(new Event('change', { bubbles: true }));
+                    break;
                 }
-                arr.push(playerObject);
             }
-            return arr;
+        });
+        console.log('Dropdown auf "All" gesetzt');
+        // Warten bis alle Zeilen nachgeladen sind
+        await page.waitForFunction(
+            () => document.querySelectorAll('table tbody tr').length > 50,
+            { timeout: 60000 }
+        );
+        console.log('Alle Zeilen geladen');
+        console.log('Beginne mit Scraping');
+        const data = await page.$$eval('table tbody tr', rows => {
+            const props = Array.from(document.querySelectorAll('table th'))
+                .map(th => th.textContent.trim().toLowerCase().replace('%', 'p'));
+            return rows.map(row => {
+                const cells = Array.from(row.querySelectorAll('td'), td => td.textContent.trim());
+                const player = props.reduce((obj, key, i) => {
+                    obj[key] = cells[i];
+                    return obj;
+                }, {});
+                const id = row.querySelector('td:nth-child(2) a')?.href.match(/\d+/)?.[0] ?? null;
+                return {
+                    ...player,
+                    id,
+                    pic: id ? `https://cdn.nba.com/headshots/nba/latest/1040x760/${id}.png` : null
+                };
+            });
         });
         console.log(`Scraping fertig, ${data.length} Datensätze gefunden`);
 
