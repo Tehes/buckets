@@ -20,26 +20,18 @@ import puppeteer from 'puppeteer';
         // Go to your site
         await page.goto('https://www.nba.com/stats/leaders?Season=2024-25&SeasonType=Regular%20Season&StatCategory=EFF');
         console.log('URL geladen');
-        // Rows-per-Page Dropdown auf "All" stellen (dynamisch finden)
-        await page.evaluate(() => {
-            const selects = Array.from(document.querySelectorAll('select'));
-            for (const sel of selects) {
-                const firstOpt = sel.querySelector('option[value="-1"]');
-                if (firstOpt && firstOpt.textContent.trim() === 'All') {
-                    sel.value = '-1';
-                    sel.dispatchEvent(new Event('change', { bubbles: true }));
-                    break;
-                }
-            }
-        });
+        // Rows-per-Page Dropdown auf "All" stellen über page.select
+        const dropdownSelector = 'div[class^="Pagination_pageDropdown__"] select[class^="DropDown_select__"]';
+        await page.waitForSelector(dropdownSelector, { timeout: 60000 });
+        // Zur Kontrolle: Anzahl gefundener Dropdowns
+        const ddCount = await page.$$eval(dropdownSelector, els => els.length);
+        console.log(`Gefundene Paginierungs-Dropdowns: ${ddCount}`);
+        await page.select(dropdownSelector, '-1');
         console.log('Dropdown auf "All" gesetzt');
-        // Warten bis alle Zeilen nachgeladen sind
-        await page.waitForFunction(
-            () => document.querySelectorAll('table tbody tr').length > 50,
-            { timeout: 60000 }
-        );
+        // Warten bis alle Zeilen geladen sind
+        await page.waitForNetworkIdle({ timeout: 60000 });
+        console.log('Netzwerk inaktiv, prüfe Zeilenanzahl');
         console.log('Alle Zeilen geladen');
-        console.log('Beginne mit Scraping');
         const data = await page.$$eval('table tbody tr', rows => {
             const props = Array.from(document.querySelectorAll('table th'))
                 .map(th => th.textContent.trim().toLowerCase().replace('%', 'p'));
