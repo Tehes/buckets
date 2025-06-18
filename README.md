@@ -9,7 +9,7 @@ to win the round. Whoever has the highest score at the end wins the game.
 
 1. **Deck Setup**: Each round, two random player cards are drawn—one for you
    (left) and one for the CPU (right).
-2. **Select a Stat (you only)**: Click on one of the blue stats on your card
+2. **Select a Stat (you only)**: Click on one of the stats on your card
    (e.g., PTS, REB, AST).
 3. **Compare**: Your selected value is compared to the CPU’s. The higher value
    wins, and the winner gets 2 points.
