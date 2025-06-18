@@ -1,10 +1,9 @@
 # BUCKETS – Basketball Stat Battle
 
-**BUCKETS** is a simple, browser-based card game where you compete against the
-computer over four quarters. Each player is dealt random NBA player statistics
-and compares values such as points, rebounds, or assists. Whoever wins a
-head-to-head comparison earns points—after four quarters, the player with the
-highest score wins.
+**BUCKETS** is a simple, browser-based card game inspired by classic Quartett
+and Top Trumps. You and the computer take turns comparing random NBA player
+stats—like points, rebounds, or assists—over four quarters. Choose the best stat
+to win the round. Whoever has the highest score at the end wins the game.
 
 ## 🎮 How to Play
 
