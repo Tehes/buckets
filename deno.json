@@ -1,4 +1,18 @@
 {
+    "fmt": {
+        "useTabs": true,
+        "indentWidth": 4,
+        "lineWidth": 100,
+        "singleQuote": false,
+        "semiColons": true
+    },
+    "lint": {
+        "rules": {
+            "tags": [
+                "recommended"
+            ]
+        }
+    },
     "tasks": {
         "scrape": "deno run --allow-net --allow-write fetchdeno.js"
     }
