@@ -2,7 +2,7 @@
     "fmt": {
         "useTabs": true,
         "indentWidth": 4,
-        "lineWidth": 100,
+        "lineWidth": 150,
         "singleQuote": false,
         "semiColons": true
     },
@@ -14,6 +14,7 @@
         }
     },
     "tasks": {
-        "fetch": "deno run -A fetchAPI.js"
+        "fetch": "deno run -A fetchAPI.js",
+        "allTime": "deno run -A fetchAlltime.js"
     }
 }
