@@ -109,8 +109,7 @@ try {
 				const href = playerLink.getAttribute("href");
 				const idMatch = href.match(/\/player\/(\d+)/);
 				if (idMatch) {
-					obj.id = idMatch[1];
-					obj.pic = `https://cdn.nba.com/headshots/nba/latest/1040x760/${idMatch[1]}.png`;
+					obj.PLAYER_ID = idMatch[1];
 				}
 			}
 
@@ -176,6 +175,7 @@ try {
 		STL: "stl",
 		BLK: "blk",
 		TOV: "tov",
+		PLAYER_ID: "id",
 	};
 
 	const data = finalPlayers.map((player) => {
@@ -187,6 +187,7 @@ try {
 				obj[key] = `${v}`;
 			}
 		}
+		obj.pic = `https://cdn.nba.com/headshots/nba/latest/1040x760/${obj.id}.png`;
 
 		return obj;
 	});
