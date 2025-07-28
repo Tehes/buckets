@@ -109,8 +109,8 @@ try {
 				const href = playerLink.getAttribute("href");
 				const idMatch = href.match(/\/player\/(\d+)/);
 				if (idMatch) {
-					obj.PLAYER_ID = idMatch[1];
-					obj.IMAGE_URL = `https://cdn.nba.com/headshots/nba/latest/1040x760/${idMatch[1]}.png`;
+					obj.id = idMatch[1];
+					obj.pic = `https://cdn.nba.com/headshots/nba/latest/1040x760/${idMatch[1]}.png`;
 				}
 			}
 
@@ -147,11 +147,52 @@ try {
 
 	console.log(`✅ Found ${completeStatsPlayers.length} players with complete stats`);
 
-	// Nimm die ersten 200 Spieler mit vollständigen Stats
+	// Nimm die ersten 130 Spieler mit vollständigen Stats
 	const finalPlayers = completeStatsPlayers.slice(0, 130);
 
-	await Deno.writeTextFile("alltime.json", JSON.stringify(finalPlayers, null, 2));
-	console.log(`✅ Saved ${finalPlayers.length} players with complete stats to alltime.json`);
+	// -----------------------------------------------------------
+	// Mapping & Normalisierung analog zu fetchAPI.js
+	// -----------------------------------------------------------
+	const map = {
+		RANK: "#",
+		PLAYER_NAME: "player",
+		PLAYER: "player",
+		GP: "gp",
+		MIN: "min",
+		PTS: "pts",
+		FGM: "fgm",
+		FGA: "fga",
+		FG_PCT: "fgp",
+		FG3M: "3pm",
+		FG3A: "3pa",
+		FG3_PCT: "3pp",
+		FTM: "ftm",
+		FTA: "fta",
+		FT_PCT: "ftp",
+		OREB: "oreb",
+		DREB: "dreb",
+		REB: "reb",
+		AST: "ast",
+		STL: "stl",
+		BLK: "blk",
+		TOV: "tov",
+	};
+
+	const data = finalPlayers.map((player) => {
+		const obj = {};
+
+		for (const [rawKey, key] of Object.entries(map)) {
+			if (player[rawKey] !== undefined && player[rawKey] !== "-" && player[rawKey] !== "") {
+				const v = player[rawKey];
+				obj[key] = `${v}`;
+			}
+		}
+
+		return obj;
+	});
+
+	await Deno.writeTextFile("alltime.json", JSON.stringify(data, null, 2));
+	console.log(`✅ Saved ${data.length} normalized player records to alltime.json`);
 } catch (err) {
 	console.error("❌  Scraping failed:", err.message);
 	throw err;
