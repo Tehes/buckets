@@ -148,7 +148,7 @@ try {
 	console.log(`✅ Found ${completeStatsPlayers.length} players with complete stats`);
 
 	// Nimm die ersten 200 Spieler mit vollständigen Stats
-	const finalPlayers = completeStatsPlayers.slice(0, 200);
+	const finalPlayers = completeStatsPlayers.slice(0, 130);
 
 	await Deno.writeTextFile("alltime.json", JSON.stringify(finalPlayers, null, 2));
 	console.log(`✅ Saved ${finalPlayers.length} players with complete stats to alltime.json`);
