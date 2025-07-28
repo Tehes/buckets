@@ -17,8 +17,7 @@ const url = `https://stats.nba.com/stats/leagueleaders?${params}`;
 const headers = {
 	Referer: "https://www.nba.com/",
 	Origin: "https://www.nba.com",
-	"User-Agent":
-		"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36",
+	"User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36",
 	"x-nba-stats-origin": "stats",
 	"x-nba-stats-token": "true",
 	Accept: "application/json, text/plain, */*",
@@ -36,7 +35,8 @@ try {
 	}
 
 	const rawHeaders = result.headers;
-	const rows = result.rowSet;
+	const MAX_RECORDS = 130;
+	const rows = result.rowSet.slice(0, MAX_RECORDS);
 
 	// Mapping von API‑Headern zu gewünschten Keys
 	const map = {
