@@ -147,8 +147,15 @@ try {
 
 	console.log(`✅ Found ${completeStatsPlayers.length} players with complete stats`);
 
-	// Nimm die ersten 200 Spieler mit vollständigen Stats
-	const finalPlayers = completeStatsPlayers.slice(0, 130);
+	console.log("🔍 Filtering for players with 3-PT attempts …");
+	const playersWithThrees = completeStatsPlayers.filter((p) => {
+		const fg3a = Number.parseFloat(p.FG3A);
+		return !Number.isNaN(fg3a) && fg3a > 0;
+	});
+	console.log(`✅ ${playersWithThrees.length} players have FG3A > 0`);
+
+	// Begrenze auf maximal 130 Spieler
+	const finalPlayers = playersWithThrees.slice(0, 130);
 
 	await Deno.writeTextFile("alltime.json", JSON.stringify(finalPlayers, null, 2));
 	console.log(`✅ Saved ${finalPlayers.length} players with complete stats to alltime.json`);
