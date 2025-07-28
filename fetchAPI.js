@@ -35,8 +35,14 @@ try {
 	}
 
 	const rawHeaders = result.headers;
+	// ── Filter: mind. 18 Minuten & 61 Spiele ──
+	const idxMIN = rawHeaders.indexOf("MIN");
+	const idxGP = rawHeaders.indexOf("GP");
+
 	const MAX_RECORDS = 130;
-	const rows = result.rowSet.slice(0, MAX_RECORDS);
+	const rows = result.rowSet
+		.filter((row) => row[idxMIN] > 17 && row[idxGP] >= 60)
+		.slice(0, MAX_RECORDS);
 
 	// Mapping von API‑Headern zu gewünschten Keys
 	const map = {
