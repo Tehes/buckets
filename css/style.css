@@ -116,6 +116,9 @@ section {
     border-radius: var(--rounded-corners);
     box-shadow: var(--drop-shadow);
     transition: box-shadow 0.5s;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
 }
 
 section.active {
@@ -164,7 +167,7 @@ main h1 {
 }
 
 main ul {
-    margin: 1vmin 0 0 4vmin;
+    margin: 1vmin 0 2vmin 4vmin;
     padding: 0;
     list-style: none;
     display: flex;
@@ -175,7 +178,7 @@ main ul {
 main li {
     font-size: 1.8vmin;
     font-weight: 800;
-    padding: 0.5vmin 0;
+    padding: 0.35vmin 0;
     color: var(--font-color);
     width: 20%;
     transition: color 0.5s;
@@ -215,7 +218,7 @@ ASIDE
 aside {
     margin-top: 5vh;
     background-color: var(--bg-color);
-    border-radius: var(--rounded-corners);  
+    border-radius: var(--rounded-corners);
     display: flex;
     justify-content: center;
     flex-direction: column;
@@ -264,7 +267,9 @@ aside output span {
     border-radius: 0 0 var(--rounded-corners) var(--rounded-corners);
 }
 
-a:link, a:active, a:visited {
+a:link,
+a:active,
+a:visited {
     text-decoration: none;
     color: var(--font-color);
 }
@@ -281,6 +286,7 @@ a:hover {
     0% {
         transform: translateY(0%);
     }
+
     100% {
         transform: translateY(-100%);
     }
@@ -294,11 +300,12 @@ MEDIA QUERIES
 */
 
 @media (prefers-color-scheme: dark) {
-     :root {
+    :root {
         --bg-color: hsl(0, 0%, 20%);
         --font-color: hsl(0, 0%, 90%);
         --text-shadow: 1px 1px #000;
     }
+
     main li:nth-of-type(even):hover {
         color: var(--bg-color);
     }
@@ -308,36 +315,43 @@ MEDIA QUERIES
     body {
         background-size: 30%, 30%, 100%, 100%;
     }
+
     header {
         margin: 1em;
         font-size: 1.2em;
         padding: 0 1em;
     }
+
     main {
         flex-direction: column;
         align-items: center;
         justify-content: space-around;
         flex: 1 0 auto;
     }
+
     .img-bg {
         height: 35.7vw;
     }
+
     .img-bg h2 {
         transform: rotate(0deg);
         top: 8%;
         left: 4%;
     }
+
     .img-bg img {
         max-width: 45vw;
         position: absolute;
         right: 7%;
     }
+
     section {
         width: 90vw;
         height: max-content;
         margin: 1vh;
         position: relative;
     }
+
     main h1 {
         position: absolute;
         top: 14%;
@@ -349,21 +363,26 @@ MEDIA QUERIES
         display: flex;
         align-items: flex-end;
     }
+
     main li {
         font-size: 1em;
         width: 12%;
         margin: 0.5vh 0;
     }
+
     aside output {
         width: 5em;
         height: 3em;
     }
+
     aside {
         margin: 1em;
     }
+
     aside output span {
         font-size: 3em;
     }
+
     .players {
         font-size: 1.2em;
         padding: 0 0.5em;
