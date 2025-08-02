@@ -42,33 +42,31 @@ try {
 	console.log("⏳  Opening NBA stats page …");
 	await page.goto(TARGET_URL, { waitUntil: "networkidle2", timeout: TIMEOUT_MS });
 
-	// Warten bis die Tabelle grundsätzlich da ist
+	// Wait until the main table element is present
 	await page.waitForSelector("table", { timeout: TIMEOUT_MS });
 	console.log("✅ Basic table loaded");
 
-	// Warte, bis mindestens sechs <select>-Elemente im DOM sind
+	// Wait until at least six <select> elements are present in the DOM
 	await page.waitForFunction(
 		() => document.querySelectorAll("select").length >= 6,
 		{ timeout: TIMEOUT_MS },
 	);
 
-	// Page Size Dropdown auf "All" setzen
+	// Change the page‑size dropdown to "All"
 	console.log("🔽 Setting page size to 'All'...");
 
 	await page.evaluate(() => {
-		// Fix: Es gibt immer genau 6 <select>, der 6. (Index 5) steuert die Page‑Size
+		// Assumption: there are always exactly 6 <select> elements; the 6th (index 5) controls page size
 		const selects = document.querySelectorAll("select");
 		const select = selects[5];
 		if (!select) throw new Error("6th <select> (page-size) not found");
 
-		// "All" hat den Wert -1
+		// The option value "-1" corresponds to "All"
 		select.value = "-1";
 		["change", "input", "blur"].forEach((type) => select.dispatchEvent(new Event(type, { bubbles: true })));
 	});
 
-	// (Kein fixes Timeout nach Dropdown-Wechsel)
-
-	// Warten bis alle Daten geladen sind
+	// Wait until all data rows have been loaded
 	console.log("⏳ Waiting for all data to load...");
 
 	await page.waitForFunction(
@@ -108,12 +106,12 @@ try {
 			const cells = tr.querySelectorAll("td");
 			const obj = {};
 
-			// Standard Daten sammeln
+			// Collect standard cell data
 			headers.forEach((key, i) => {
 				obj[key] = cells[i] ? cells[i].textContent.trim() : "";
 			});
 
-			// Spieler-ID aus dem Link extrahieren
+			// Extract player ID from the link
 			const playerLink = tr.querySelector("a[href*='/player/']");
 			if (playerLink) {
 				const href = playerLink.getAttribute("href");
@@ -126,7 +124,7 @@ try {
 			collected.push(obj);
 		});
 
-		// Sortieren nach Rang
+		// Sort by rank (ascending)
 		const sortedLeaders = collected.sort((a, b) =>
 			Number.parseInt(a["#"] ?? a.rank ?? a.Rank) -
 			Number.parseInt(b["#"] ?? b.rank ?? b.Rank)
@@ -137,17 +135,11 @@ try {
 	});
 
 	// -----------------------------------------------------------------
-	// Filter für vollständige Statistiken
+	// Filter for complete statistics
 	// -----------------------------------------------------------------
-	console.log("🔍 Filtering for >17 mins & >60 games stats...");
+	console.log("🔍 Filtering for rotation-level players (≥17 MIN, ≥61 GP) …");
 
-	const completeStatsPlayers = leaders.filter((player) => {
-		// Spieler muss alle Stats haben (keine "-" oder leere Werte)
-		const hasCompleteStats = Object.entries(player).every(([_key, value]) =>
-			value !== "-" && value !== "" && value !== null && value !== undefined
-		);
-
-		// Zusätzlicher Filter: mind. MIN_MINUTES und MIN_GAMES
+	const rotationPlayers = leaders.filter((player) => {
 		const min = Number(player.MIN);
 		const gp = Number(player.GP);
 		const meetsMinuteGameThreshold = Number.isFinite(min) &&
@@ -155,15 +147,14 @@ try {
 			min >= MIN_MINUTES &&
 			gp >= MIN_GAMES;
 
-		return hasCompleteStats && meetsMinuteGameThreshold;
+		return meetsMinuteGameThreshold;
 	});
 
-	console.log(`✅ Found ${completeStatsPlayers.length} players with complete stats`);
-
-	const finalPlayers = completeStatsPlayers.slice(0, MAX_ROWS);
+	console.log(`✅ Found ${rotationPlayers.length} rotation level players`);
+	const finalPlayers = rotationPlayers.slice(0, MAX_ROWS);
 
 	// -----------------------------------------------------------
-	// Mapping & Normalisierung analog zu fetchAPI.js
+	// Mapping & normalization
 	// -----------------------------------------------------------
 	const map = {
 		RANK: "#",
