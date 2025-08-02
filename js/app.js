@@ -26,6 +26,8 @@ categories.forEach(function (category) {
 });
 let active;
 
+const WAIT_TIME = 3000; // time in ms to wait before next action
+
 /* --------------------------------------------------------------------------------------------------
 functions
 ---------------------------------------------------------------------------------------------------*/
@@ -128,7 +130,7 @@ function compareValues(ev) {
 		values[0].classList.add("lower");
 	}
 
-	setTimeout(resetCategory.bind(null, values), 2000);
+	setTimeout(resetCategory.bind(null, values), WAIT_TIME);
 }
 
 function resetCategory(values) {
@@ -173,7 +175,7 @@ function checkClock() {
 		players[1].classList.toggle("active");
 
 		if (active === "user") {
-			setTimeout(compareValues, 1500);
+			setTimeout(compareValues, WAIT_TIME);
 		} else if (active === "cpu") {
 			document.addEventListener("click", compareValues, false);
 		}
@@ -217,7 +219,7 @@ app.init();
 Service Worker configuration. Toggle 'useServiceWorker' to enable or disable the Service Worker.
 ---------------------------------------------------------------------------------------------------*/
 const useServiceWorker = true; // Set to "true" if you want to register the Service Worker, "false" to unregister
-const serviceWorkerVersion = "2025-07-29-v1"; // Increment this version to force browsers to fetch a new service-worker.js
+const serviceWorkerVersion = "2025-08-02-v1"; // Increment this version to force browsers to fetch a new service-worker.js
 
 async function registerServiceWorker() {
 	try {
