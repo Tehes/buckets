@@ -12,7 +12,7 @@
 
 import puppeteer from "https://deno.land/x/puppeteer@16.2.0/mod.ts";
 
-const TARGET_URL = "https://www.nba.com/stats/alltime-leaders?SeasonType=Regular%20Season&PerMode=PerGame&StatCategory=PTS";
+const TARGET_URL = "https://www.nba.com/stats/leaders?SeasonType=Regular+Season&StatCategory=EFF";
 
 const DEFAULT_CHROME = "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"; // macOS path
 const executablePath = Deno.env.get("PUPPETEER_EXECUTABLE_PATH") ??
@@ -50,7 +50,7 @@ try {
 	console.log("🔽 Setting page size to 'All'...");
 
 	await page.evaluate(() => {
-		const select = document.querySelectorAll(".DropDown_select__4pIg9")[3];
+		const select = document.querySelectorAll(".DropDown_select__4pIg9")[5];
 		select.value = "-1";
 
 		// Event triggern
@@ -67,7 +67,7 @@ try {
 
 	await page.waitForFunction(() => {
 		const rows = document.querySelectorAll("table.Crom_table__p1iZz tbody tr");
-		return rows.length >= 300;
+		return rows.length >= 130;
 	}, { timeout: 30000 });
 
 	console.log("✅ All data loaded, collecting entries...");
@@ -129,19 +129,20 @@ try {
 	// -----------------------------------------------------------------
 	// Filter für vollständige Statistiken
 	// -----------------------------------------------------------------
-	console.log("🔍 Filtering for complete stats...");
+	console.log("🔍 Filtering for >17 mins & >60 games stats...");
 
 	const completeStatsPlayers = leaders.filter((player) => {
 		// Spieler muss alle Stats haben (keine "-" oder leere Werte)
-		// Aber PLAYER_ID und IMAGE_URL sind optional
-		const hasCompleteStats = Object.entries(player).every(([_key, value]) => {
-			return value !== "-" &&
-				value !== "" &&
-				value !== null &&
-				value !== undefined;
-		});
+		const hasCompleteStats = Object.entries(player).every(([_key, value]) =>
+			value !== "-" && value !== "" && value !== null && value !== undefined
+		);
 
-		return hasCompleteStats;
+		// Zusätzlicher Filter: mind. 18 MIN und 61 GP
+		const min = Number(player.MIN);
+		const gp = Number(player.GP);
+		const meetsMinuteGameThreshold = Number.isFinite(min) && Number.isFinite(gp) && min >= 18 && gp >= 61;
+
+		return hasCompleteStats && meetsMinuteGameThreshold;
 	});
 
 	console.log(`✅ Found ${completeStatsPlayers.length} players with complete stats`);
@@ -155,7 +156,7 @@ try {
 	const map = {
 		RANK: "#",
 		PLAYER_NAME: "player",
-		PLAYER: "player",
+		TEAM: "team",
 		GP: "gp",
 		MIN: "min",
 		PTS: "pts",
@@ -175,6 +176,7 @@ try {
 		STL: "stl",
 		BLK: "blk",
 		TOV: "tov",
+		EFF: "eff",
 		PLAYER_ID: "id",
 	};
 
@@ -192,8 +194,8 @@ try {
 		return obj;
 	});
 
-	await Deno.writeTextFile("alltime.json", JSON.stringify(data, null, 2));
-	console.log(`✅ Saved ${data.length} normalized player records to alltime.json`);
+	await Deno.writeTextFile("data.json", JSON.stringify(data, null, 2));
+	console.log(`✅ Saved ${data.length} normalized player records to data.json`);
 } catch (err) {
 	console.error("❌  Scraping failed:", err.message);
 	throw err;
