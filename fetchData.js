@@ -1,13 +1,13 @@
 // ---------------------------------------------------------------------------
-// Scrapes the NBA All‑Time Regular‑Season PTS‑Per‑Game leaders (first 200 rows)
+// Scrapes the NBA Regular‑Season EFF‑Per‑Game leaders (first 130 rows)
 // with **Puppeteer** (runs headless Chromium in Deno, no node_modules).
-// Only includes players with complete stats (no "-" values).
+// Only includes players with complete stats.
 // Adds player image URLs.
 //
 // Usage:
-//   deno run -A fetchAlltime.js
+//   deno run -A fetchdata.js
 //
-// This writes players with complete stats into alltime.json.
+// This writes players stats into data.json.
 // ---------------------------------------------------------------------------
 
 import puppeteer from "https://deno.land/x/puppeteer@16.2.0/mod.ts";
@@ -19,6 +19,11 @@ const executablePath = Deno.env.get("PUPPETEER_EXECUTABLE_PATH") ??
 		(await Deno.permissions.query({ name: "env" })).state === "granted"
 	? DEFAULT_CHROME
 	: undefined;
+
+const TIMEOUT_MS = 30_000;
+const MAX_ROWS = 130;
+const MIN_MINUTES = 18;
+const MIN_GAMES = 61;
 
 const browser = await puppeteer.launch({
 	headless: true,
@@ -33,42 +38,47 @@ const browser = await puppeteer.launch({
 
 try {
 	const page = await browser.newPage();
-	await page.setUserAgent(
-		"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36",
-	);
 
 	console.log("⏳  Opening NBA stats page …");
-	await page.goto(TARGET_URL, { waitUntil: "networkidle2", timeout: 60000 });
+	await page.goto(TARGET_URL, { waitUntil: "networkidle2", timeout: TIMEOUT_MS });
 
 	// Warten bis die Tabelle grundsätzlich da ist
-	await page.waitForSelector("table.Crom_table__p1iZz tbody tr", { timeout: 60000 });
+	await page.waitForSelector("table", { timeout: TIMEOUT_MS });
 	console.log("✅ Basic table loaded");
 
-	await page.waitForTimeout(2000);
+	// Warte, bis mindestens sechs <select>-Elemente im DOM sind
+	await page.waitForFunction(
+		() => document.querySelectorAll("select").length >= 6,
+		{ timeout: TIMEOUT_MS },
+	);
 
 	// Page Size Dropdown auf "All" setzen
 	console.log("🔽 Setting page size to 'All'...");
 
 	await page.evaluate(() => {
-		const select = document.querySelectorAll(".DropDown_select__4pIg9")[5];
-		select.value = "-1";
+		// Fix: Es gibt immer genau 6 <select>, der 6. (Index 5) steuert die Page‑Size
+		const selects = document.querySelectorAll("select");
+		const select = selects[5];
+		if (!select) throw new Error("6th <select> (page-size) not found");
 
-		// Event triggern
-		["change", "input", "blur"].forEach((eventType) => {
-			const event = new Event(eventType, { bubbles: true });
-			select.dispatchEvent(event);
-		});
+		// "All" hat den Wert -1
+		select.value = "-1";
+		["change", "input", "blur"].forEach((type) => select.dispatchEvent(new Event(type, { bubbles: true })));
 	});
 
-	await page.waitForTimeout(3000);
+	// (Kein fixes Timeout nach Dropdown-Wechsel)
 
 	// Warten bis alle Daten geladen sind
 	console.log("⏳ Waiting for all data to load...");
 
-	await page.waitForFunction(() => {
-		const rows = document.querySelectorAll("table.Crom_table__p1iZz tbody tr");
-		return rows.length >= 130;
-	}, { timeout: 30000 });
+	await page.waitForFunction(
+		(limit) => {
+			const rows = document.querySelectorAll("table tbody tr");
+			return rows.length >= limit;
+		},
+		{ timeout: TIMEOUT_MS },
+		MAX_ROWS,
+	);
 
 	console.log("✅ All data loaded, collecting entries...");
 
@@ -137,18 +147,20 @@ try {
 			value !== "-" && value !== "" && value !== null && value !== undefined
 		);
 
-		// Zusätzlicher Filter: mind. 18 MIN und 61 GP
+		// Zusätzlicher Filter: mind. MIN_MINUTES und MIN_GAMES
 		const min = Number(player.MIN);
 		const gp = Number(player.GP);
-		const meetsMinuteGameThreshold = Number.isFinite(min) && Number.isFinite(gp) && min >= 18 && gp >= 61;
+		const meetsMinuteGameThreshold = Number.isFinite(min) &&
+			Number.isFinite(gp) &&
+			min >= MIN_MINUTES &&
+			gp >= MIN_GAMES;
 
 		return hasCompleteStats && meetsMinuteGameThreshold;
 	});
 
 	console.log(`✅ Found ${completeStatsPlayers.length} players with complete stats`);
 
-	// Nimm die ersten 130 Spieler mit vollständigen Stats
-	const finalPlayers = completeStatsPlayers.slice(0, 130);
+	const finalPlayers = completeStatsPlayers.slice(0, MAX_ROWS);
 
 	// -----------------------------------------------------------
 	// Mapping & Normalisierung analog zu fetchAPI.js
