@@ -58,16 +58,12 @@ body {
     padding: 0;
 }
 
-/* Moderner Weg – dynamische Viewport-Höhe */
 @supports (height: 100dvh) {
     body {
         height: 100dvh;
     }
-
-    /* Desktop = 100vh, Mobile passt sich an */
 }
 
-/* Fallback nur für sehr alte Mobile-Safari/Android */
 @supports not (height: 100dvh) {
     body {
         height: -webkit-fill-available;
