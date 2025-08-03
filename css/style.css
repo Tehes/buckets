@@ -298,9 +298,6 @@ MEDIA QUERIES
     main {
         flex-direction: column;
         align-items: center;
-        justify-content: center;
-        flex: 0 0 auto;
-        gap: 3vmin;
     }
 
     .img-bg {
@@ -317,7 +314,6 @@ MEDIA QUERIES
     section {
         width: 90vw;
         height: max-content;
-        margin: 1vh;
         position: relative;
     }
 
@@ -344,7 +340,7 @@ MEDIA QUERIES
     }
 
     aside {
-        margin: 1em;
+        margin-top: 2vmin;
     }
 
     aside output span {
