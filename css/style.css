@@ -58,13 +58,15 @@ body {
     padding: 0;
 }
 
-@supports (height: 100dvh) {
+@supports (height: 100vh) {
+
     body {
-        height: 100dvh;
+        height: 100vh;
     }
 }
 
-@supports not (height: 100dvh) {
+@supports not (height: 100vh) {
+
     body {
         height: -webkit-fill-available;
     }
