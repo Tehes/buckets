@@ -74,28 +74,10 @@ body {
     /* mobile viewport bug fix */
     min-height: -webkit-fill-available;
     display: flex;
-    justify-content: flex-start;
+    justify-content: space-around;
     align-items: center;
     flex-direction: column;
 }
-
-
-/*
--------------------------------------------------------------------
-HEADER
--------------------------------------------------------------------
-*/
-
-header {
-    background-color: var(--bg-color);
-    margin: 3vmin 0 5vmin 0;
-    padding: 1vmin;
-    border-radius: var(--rounded-corners);
-    font-size: 3vmin;
-    text-transform: uppercase;
-    font-weight: 900;
-}
-
 
 /*
 -------------------------------------------------------------------
@@ -258,13 +240,15 @@ aside output span {
     font-weight: 800;
 }
 
-#credit {
-    font-size: 0.8rem;
+#time {
+    font-size: max(2.5vmin, 1.2em);
     padding: 0.5vmin;
     display: flex;
     justify-content: center;
     background-color: var(--grey);
     border-radius: 0 0 var(--rounded-corners) var(--rounded-corners);
+    text-transform: uppercase;
+    font-weight: 700;
 }
 
 a:link,
@@ -314,19 +298,15 @@ MEDIA QUERIES
 @media only screen and (max-width: 480px) {
     body {
         background-size: 30%, 30%, 100%, 100%;
-    }
-
-    header {
-        margin: 1em;
-        font-size: 1.2em;
-        padding: 0 1em;
+        justify-content: center;
     }
 
     main {
         flex-direction: column;
         align-items: center;
-        justify-content: space-around;
-        flex: 1 0 auto;
+        justify-content: center;
+        flex: 0 0 auto;
+        gap: 3vmin;
     }
 
     .img-bg {
