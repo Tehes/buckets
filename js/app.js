@@ -23,8 +23,6 @@ const categories = [
 
 const WAIT_TIME = 3000; // time in ms to wait before next action
 
-
-
 /* --------------------------------------------------------------------------------------------------
 functions
 ---------------------------------------------------------------------------------------------------*/
@@ -79,8 +77,8 @@ function compareValues(ev) {
 	const rightScore = scores[3];
 
 	let points = 2;
-	if (category === "ftp") { points = 1; }
-	else if (category === "3pm" || category === "3pp") { points = 3; }
+	if (category === "ftp") points = 1;
+	else if (category === "3pm" || category === "3pp") points = 3;
 
 	if (leftValue > rightValue) {
 		leftScore.textContent = parseInt(leftScore.textContent) + points;
@@ -135,61 +133,120 @@ function checkClock() {
 	}
 }
 
-/** ---------------------------------------------------------------------------
- *  Card draw logic – "hardest‑possible" opponent version
- *  • Player card: random draw
- *  • CPU card: the one that minimises the number of categories the player wins
- *    (0 is the toughest — the player schlägt die Karte in gar keiner Kategorie).
- *    Bei Gleichstand nimmt der Algorithmus die zuerst gefundene Karte.
- * -------------------------------------------------------------------------*/
-
-/** Zählt die Kategorien, in denen player > cpu */
+/** Zählt die Kategorien, in denen der Spieler besser ist als die CPU */
 function playerWinsCnt(playerCard, cpuCard) {
-  let cnt = 0;
-  for (const c of categories) {
-    if (+playerCard[c] > +cpuCard[c]) cnt++;
-    if (cnt > 3) break; // mehr brauchen wir nicht – 4+ ist eh schwach
-  }
-  return cnt;
+	let cnt = 0;
+	for (const c of categories) {
+		if (+playerCard[c] > +cpuCard[c]) cnt++;
+		if (cnt > 3) break; // mehr brauchen wir nicht
+	}
+	return cnt;
+}
+
+function maxAllowedWins(lead) {
+	const MULT = 0.2; // 1 Kategorie je 5 Punkte Differenz
+	const raw = 3 - Math.floor(lead * MULT);
+	return Math.max(0, Math.min(5, raw));
 }
 
 function playCards() {
-  /* ---------- 1. Spielerkarte – zufällig ---------- */
-  const playerIdx  = Math.floor(Math.random() * stats.length);
-  const playerCard = stats.splice(playerIdx, 1)[0];
+	/* ---------- dynamische Schwierigkeits‑Schwelle -------------- */
+	const spans = document.querySelectorAll("output span");
+	const cpuScore = parseInt(spans[1].textContent);
+	const playerScore = parseInt(spans[3].textContent);
+	const lead = playerScore - cpuScore; // positiv = Spieler führt
+	const allowedWins = maxAllowedWins(lead);
 
-  /* ---------- 2. CPU‑Karte: absolut härtester Gegner -------------- */
-  let bestCpuIdx = 0;
-  let bestCnt    = Infinity; // kleinster Wert = härteste Karte
+	/* ---------- 1. Schleife: Spielerkarte suchen ---------- */
+	let attempts = 0;
+	let playerIdx = 0;
+	let playerCard = null;
 
-  for (let i = 0; i < stats.length; i++) {
-    const cnt = playerWinsCnt(playerCard, stats[i]);
+	// beste Karte innerhalb des Limits, initial „nicht gefunden“
+	let bestCpuIdx = -1;
+	let bestCnt = -1;
+	// Zwei Fallback‑Varianten:
+	//   * fallbackHard … kleinst‑möglicher cnt  → schwerstes Match‑up
+	//   * fallbackEasy … größt‑möglicher cnt    → leichtestes Match‑up
+	let fallbackHardIdx = 0;
+	let fallbackHardCnt = Infinity;
+	let fallbackEasyIdx = 0;
+	let fallbackEasyCnt = -1;
 
-    // Karte ist härter als alles bisherige → merken
-    if (cnt < bestCnt) {
-      bestCpuIdx = i;
-      bestCnt    = cnt;
+	while (true) {
+		attempts++;
 
-      // Perfekte Härte erreicht? (Spieler gewinnt gar nicht) → sofort aufhören
-      if (bestCnt === 0) break;
-    }
-  }
+		// Kandidat für den Spieler
+		playerIdx = Math.floor(Math.random() * stats.length);
+		playerCard = stats[playerIdx];
 
-  const cpuCard = stats.splice(bestCpuIdx, 1)[0];
+		// Suche passend harte CPU‑Karte zu diesem Kandidaten
+		bestCpuIdx = -1;
+		bestCnt = -1;
 
-  /* ---------- 3. Karten aufs Feld ---------------- */
-  setCard("right", playerCard); // Home / Player
-  setCard("left",  cpuCard);    // Guest / CPU
+		for (let i = 0; i < stats.length; i++) {
+			if (i === playerIdx) continue; // nicht mit sich selbst vergleichen
+			const cnt = playerWinsCnt(playerCard, stats[i]);
 
-  /* ---------- 4. Debug‑Log ----------------------- */
-  console.log("--- New Draw ---");
-  console.table({
-    player:       playerCard.player,
-    cpu:          cpuCard.player,
-    "player‑wins": bestCnt,
-  });
+			if (cnt <= allowedWins) {
+				// innerhalb des Limits ⇒ je GRÖSSER cnt, desto schwerer für den Spieler
+				if (cnt > bestCnt) {
+					bestCnt = cnt;
+					bestCpuIdx = i;
+
+					// Wenn wir exakt am Limit sind, geht es nicht schwerer ‑ abbrechen
+					if (bestCnt === allowedWins) break;
+				}
+			} else {
+				// außerhalb des Limits ⇒ sowohl hartes als auch leichtes Fallback merken
+				if (cnt < fallbackHardCnt) {
+					fallbackHardCnt = cnt;
+					fallbackHardIdx = i;
+				}
+				if (cnt > fallbackEasyCnt) {
+					fallbackEasyCnt = cnt;
+					fallbackEasyIdx = i;
+				}
+			}
+		}
+
+		// Gab es *gar* keine Karte, die in den erlaubten Rahmen passt?
+		if (bestCpuIdx === -1) {
+			if (lead >= 0) { // Spieler führt → härtestes Fallback
+				bestCpuIdx = fallbackHardIdx;
+				bestCnt = fallbackHardCnt;
+			} else { // Spieler liegt hinten → leichtestes Fallback
+				bestCpuIdx = fallbackEasyIdx;
+				bestCnt = fallbackEasyCnt;
+			}
+		}
+
+		/* Wenn wir eine Karte ≤allowedWins gefunden haben, oder nach 20 Versuchen
+		   immer noch nicht – dann akzeptieren wir den aktuellen Kandidaten. */
+		if (bestCnt <= allowedWins || attempts >= 20) break;
+	}
+
+	/* ---------- 2. Karten endgültig aus dem Deck entfernen ---------- */
+	playerCard = stats.splice(playerIdx, 1)[0];
+	// CPU‑Index korrigieren, falls er hinter der entfernten Spielerkarte lag
+	if (bestCpuIdx > playerIdx) bestCpuIdx--;
+	const cpuCard = stats.splice(bestCpuIdx, 1)[0];
+
+	/* ---------- 3. Karten aufs Spielfeld legen ---------------------- */
+	setCard("right", playerCard); // Home / Spieler
+	setCard("left", cpuCard); // Guest / CPU
+
+	/* ---------- 4. Debug‑Ausgabe ------------------------------------ */
+	console.log("--- New Draw ---");
+	console.table({
+		attempts,
+		lead,
+		allowedWins,
+		player: playerCard.player,
+		cpu: cpuCard.player,
+		"player-wins": bestCnt,
+	});
 }
-
 
 function updateScore(ev) {
 	const numbers = ev.target.querySelectorAll("span");
@@ -198,7 +255,7 @@ function updateScore(ev) {
 }
 
 function init() {
-	document.addEventListener("touchstart", function () { }, false);
+	document.addEventListener("touchstart", function () {}, false);
 	document.addEventListener("click", compareValues, false);
 	document.addEventListener("animationend", updateScore, false);
 
