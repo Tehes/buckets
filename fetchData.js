@@ -23,7 +23,8 @@ const executablePath = Deno.env.get("PUPPETEER_EXECUTABLE_PATH") ??
 const TIMEOUT_MS = 30_000;
 const MAX_ROWS = 130;
 const MIN_MINUTES = 18;
-const MIN_GAMES = 61;
+const MIN_GAMES = 60;
+const MAX_GAMES = 82;
 
 const browser = await puppeteer.launch({
 	headless: true,
@@ -145,7 +146,8 @@ try {
 		const meetsMinuteGameThreshold = Number.isFinite(min) &&
 			Number.isFinite(gp) &&
 			min >= MIN_MINUTES &&
-			gp >= MIN_GAMES;
+			gp >= MIN_GAMES &&
+			gp <= MAX_GAMES;
 
 		return meetsMinuteGameThreshold;
 	});

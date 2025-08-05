@@ -32,7 +32,7 @@ try {
 
 	const MAX_RECORDS = 130;
 	const rows = result.rowSet
-		.filter((row) => row[idxMIN] > 17 && row[idxGP] >= 60)
+		.filter((row) => row[idxMIN] > 17 && row[idxGP] >= 60 && row[idxGP] <= 82)
 		.slice(0, MAX_RECORDS);
 
 	// Mapping von API‑Headern zu gewünschten Keys
