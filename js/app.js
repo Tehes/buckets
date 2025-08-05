@@ -23,6 +23,8 @@ const categories = [
 
 const WAIT_TIME = 3000; // time in ms to wait before next action
 
+
+
 /* --------------------------------------------------------------------------------------------------
 functions
 ---------------------------------------------------------------------------------------------------*/
@@ -133,10 +135,61 @@ function checkClock() {
 	}
 }
 
-function playCards() {
-	setCard("left", stats.shift());
-	setCard("right", stats.shift());
+/** ---------------------------------------------------------------------------
+ *  Card draw logic – "hardest‑possible" opponent version
+ *  • Player card: random draw
+ *  • CPU card: the one that minimises the number of categories the player wins
+ *    (0 is the toughest — the player schlägt die Karte in gar keiner Kategorie).
+ *    Bei Gleichstand nimmt der Algorithmus die zuerst gefundene Karte.
+ * -------------------------------------------------------------------------*/
+
+/** Zählt die Kategorien, in denen player > cpu */
+function playerWinsCnt(playerCard, cpuCard) {
+  let cnt = 0;
+  for (const c of categories) {
+    if (+playerCard[c] > +cpuCard[c]) cnt++;
+    if (cnt > 3) break; // mehr brauchen wir nicht – 4+ ist eh schwach
+  }
+  return cnt;
 }
+
+function playCards() {
+  /* ---------- 1. Spielerkarte – zufällig ---------- */
+  const playerIdx  = Math.floor(Math.random() * stats.length);
+  const playerCard = stats.splice(playerIdx, 1)[0];
+
+  /* ---------- 2. CPU‑Karte: absolut härtester Gegner -------------- */
+  let bestCpuIdx = 0;
+  let bestCnt    = Infinity; // kleinster Wert = härteste Karte
+
+  for (let i = 0; i < stats.length; i++) {
+    const cnt = playerWinsCnt(playerCard, stats[i]);
+
+    // Karte ist härter als alles bisherige → merken
+    if (cnt < bestCnt) {
+      bestCpuIdx = i;
+      bestCnt    = cnt;
+
+      // Perfekte Härte erreicht? (Spieler gewinnt gar nicht) → sofort aufhören
+      if (bestCnt === 0) break;
+    }
+  }
+
+  const cpuCard = stats.splice(bestCpuIdx, 1)[0];
+
+  /* ---------- 3. Karten aufs Feld ---------------- */
+  setCard("right", playerCard); // Home / Player
+  setCard("left",  cpuCard);    // Guest / CPU
+
+  /* ---------- 4. Debug‑Log ----------------------- */
+  console.log("--- New Draw ---");
+  console.table({
+    player:       playerCard.player,
+    cpu:          cpuCard.player,
+    "player‑wins": bestCnt,
+  });
+}
+
 
 function updateScore(ev) {
 	const numbers = ev.target.querySelectorAll("span");
@@ -145,15 +198,10 @@ function updateScore(ev) {
 }
 
 function init() {
-	document.addEventListener("touchstart", function () {}, false);
+	document.addEventListener("touchstart", function () { }, false);
 	document.addEventListener("click", compareValues, false);
 	document.addEventListener("animationend", updateScore, false);
 
-	// Fisher–Yates shuffle (in‑place)
-	for (let i = stats.length - 1; i > 0; i--) {
-		const j = Math.floor(Math.random() * (i + 1));
-		[stats[i], stats[j]] = [stats[j], stats[i]];
-	}
 	playCards();
 }
 
