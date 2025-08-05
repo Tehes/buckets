@@ -154,17 +154,16 @@ function maxAllowedWins(lead) {
 	const MULT = 0.25; // 1 less category allowed per 4 points lead
 
 	const raw = BASE - Math.floor(lead * MULT);
-	return Math.max(0, raw); // nie negativ
+	return Math.max(0, raw); // never negative
 }
 
 function playCards() {
 	const spans = document.querySelectorAll("output span");
 	const cpuScore = parseInt(spans[1].textContent);
 	const playerScore = parseInt(spans[3].textContent);
-	const lead = playerScore - cpuScore; // positiv = Spieler führt
+	const lead = playerScore - cpuScore; // positive = player leads
 	const allowedWins = maxAllowedWins(lead);
 
-	/* ---------- 1. Schleife: Spielerkarte suchen ---------- */
 	let attempts = 0;
 	let playerIdx = 0;
 	let playerCard = null;
@@ -174,22 +173,18 @@ function playCards() {
 	let currentMaxWins = allowedWins;
 	const step = lead >= 0 ? 1 : -1;
 
-	while (true) {
-		let foundExact = false; // haben wir eine Karte mit exakt currentMaxWins?
-
-		// Pro Limit bis zu 20 Versuche
+	let foundExact = false; // true if we found a CPU card with exactly currentMaxWins
+	while (!foundExact) {
 		for (let tries = 0; tries < 20 && !foundExact; tries++) {
 			attempts++;
 
 			playerIdx = Math.floor(Math.random() * stats.length);
 			playerCard = stats[playerIdx];
 
-			// Deck einmal komplett scannen
 			for (let i = 0; i < stats.length; i++) {
 				if (i === playerIdx) continue;
 				const cnt = playerWinsCnt(playerCard, stats[i]);
 
-				// Wir wollen *exakt* currentMaxWins treffen
 				if (cnt === currentMaxWins) {
 					bestCpuIdx = i;
 					bestCnt = cnt;
@@ -199,24 +194,20 @@ function playCards() {
 			}
 		}
 
-		// Treffer mit exakt currentMaxWins gefunden ⇒ fertig
-		if (foundExact) break;
-
-		// Kein exakter Treffer ⇒ Limit um ±1 anpassen (mindestens 0) und erneut versuchen
-		currentMaxWins = Math.max(0, currentMaxWins + step);
+		// adjust limit only if still not found
+		if (!foundExact) {
+			currentMaxWins = Math.max(0, currentMaxWins + step);
+		}
 	}
 
-	/* ---------- 2. Karten endgültig aus dem Deck entfernen ---------- */
 	playerCard = stats.splice(playerIdx, 1)[0];
 	if (bestCpuIdx > playerIdx) bestCpuIdx--;
 	const cpuCard = stats.splice(bestCpuIdx, 1)[0];
 
-	/* ---------- 3. Karten aufs Spielfeld legen ---------------------- */
-	setCard("right", playerCard); // Home / Spieler
+	setCard("right", playerCard); // Home / Player
 	setCard("left", cpuCard); // Guest / CPU
 
-	/* ---------- 4. Debug-Ausgabe ------------------------------------ */
-	console.log("--- New Draw ---");
+	/* Debug */
 	console.table({
 		attempts,
 		lead,
