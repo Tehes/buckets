@@ -76,13 +76,17 @@ function compareValues(ev) {
 	const leftScore = scores[1];
 	const rightScore = scores[3];
 
+	let points = 2;
+	if (category === "ftp") { points = 1; }
+	else if (category === "3pm" || category === "3pp") { points = 3; }
+
 	if (leftValue > rightValue) {
-		leftScore.textContent = parseInt(leftScore.textContent) + 2;
+		leftScore.textContent = parseInt(leftScore.textContent) + points;
 		document.querySelectorAll("output")[0].classList.add("animate");
 		values[0].classList.add("higher");
 		values[1].classList.add("lower");
 	} else if (rightValue > leftValue) {
-		rightScore.textContent = parseInt(rightScore.textContent) + 2;
+		rightScore.textContent = parseInt(rightScore.textContent) + points;
 		document.querySelectorAll("output")[1].classList.add("animate");
 		values[1].classList.add("higher");
 		values[0].classList.add("lower");
