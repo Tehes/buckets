@@ -77,8 +77,13 @@ function compareValues(ev) {
 	const rightScore = scores[3];
 
 	let points = 2;
-	if (category === "ftp") points = 1;
-	else if (category === "3pm" || category === "3pp") points = 3;
+	// Lower‑impact categories count only 1 point
+	if (category === "ftp" || category === "gp" || category === "min") {
+		points = 1;
+	} // High‑variance 3‑point stats are worth 3
+	else if (category === "3pm" || category === "3pp") {
+		points = 3;
+	}
 
 	if (leftValue > rightValue) {
 		leftScore.textContent = parseInt(leftScore.textContent) + points;
@@ -110,7 +115,7 @@ function checkClock() {
 	let i = parseInt(quarter.textContent[0]) - 1;
 	clock.textContent = parseInt(clock.textContent) - 1;
 
-	// if quarter ist over
+	// if quarter is over
 	if (clock.textContent === "0" && i < 3) {
 		clock.textContent = "12";
 		i++;
@@ -133,24 +138,26 @@ function checkClock() {
 	}
 }
 
-/** Zählt die Kategorien, in denen der Spieler besser ist als die CPU */
 function playerWinsCnt(playerCard, cpuCard) {
 	let cnt = 0;
 	for (const c of categories) {
 		if (+playerCard[c] > +cpuCard[c]) cnt++;
-		if (cnt > 3) break; // mehr brauchen wir nicht
 	}
 	return cnt;
 }
 
 function maxAllowedWins(lead) {
-	const MULT = 0.2; // 1 Kategorie je 5 Punkte Differenz
-	const raw = 3 - Math.floor(lead * MULT);
-	return Math.max(0, Math.min(5, raw));
+	// Difficulty parameters:
+	//   BASE  – base number of allowed player winning categories when scores are tied
+	//   MULT  – for every 4 points lead, 1 category is subtracted
+	const BASE = 2; // Player may win up to 2 categories when tied
+	const MULT = 0.25; // 1 less category allowed per 4 points lead
+
+	const raw = BASE - Math.floor(lead * MULT);
+	return Math.max(0, raw); // nie negativ
 }
 
 function playCards() {
-	/* ---------- dynamische Schwierigkeits‑Schwelle -------------- */
 	const spans = document.querySelectorAll("output span");
 	const cpuScore = parseInt(spans[1].textContent);
 	const playerScore = parseInt(spans[3].textContent);
@@ -161,74 +168,46 @@ function playCards() {
 	let attempts = 0;
 	let playerIdx = 0;
 	let playerCard = null;
-
-	// beste Karte innerhalb des Limits, initial „nicht gefunden“
 	let bestCpuIdx = -1;
 	let bestCnt = -1;
-	// Zwei Fallback‑Varianten:
-	//   * fallbackHard … kleinst‑möglicher cnt  → schwerstes Match‑up
-	//   * fallbackEasy … größt‑möglicher cnt    → leichtestes Match‑up
-	let fallbackHardIdx = 0;
-	let fallbackHardCnt = Infinity;
-	let fallbackEasyIdx = 0;
-	let fallbackEasyCnt = -1;
+
+	let currentMaxWins = allowedWins;
+	const step = lead >= 0 ? 1 : -1;
 
 	while (true) {
-		attempts++;
+		let foundExact = false; // haben wir eine Karte mit exakt currentMaxWins?
 
-		// Kandidat für den Spieler
-		playerIdx = Math.floor(Math.random() * stats.length);
-		playerCard = stats[playerIdx];
+		// Pro Limit bis zu 20 Versuche
+		for (let tries = 0; tries < 20 && !foundExact; tries++) {
+			attempts++;
 
-		// Suche passend harte CPU‑Karte zu diesem Kandidaten
-		bestCpuIdx = -1;
-		bestCnt = -1;
+			playerIdx = Math.floor(Math.random() * stats.length);
+			playerCard = stats[playerIdx];
 
-		for (let i = 0; i < stats.length; i++) {
-			if (i === playerIdx) continue; // nicht mit sich selbst vergleichen
-			const cnt = playerWinsCnt(playerCard, stats[i]);
+			// Deck einmal komplett scannen
+			for (let i = 0; i < stats.length; i++) {
+				if (i === playerIdx) continue;
+				const cnt = playerWinsCnt(playerCard, stats[i]);
 
-			if (cnt <= allowedWins) {
-				// innerhalb des Limits ⇒ je GRÖSSER cnt, desto schwerer für den Spieler
-				if (cnt > bestCnt) {
-					bestCnt = cnt;
+				// Wir wollen *exakt* currentMaxWins treffen
+				if (cnt === currentMaxWins) {
 					bestCpuIdx = i;
-
-					// Wenn wir exakt am Limit sind, geht es nicht schwerer ‑ abbrechen
-					if (bestCnt === allowedWins) break;
-				}
-			} else {
-				// außerhalb des Limits ⇒ sowohl hartes als auch leichtes Fallback merken
-				if (cnt < fallbackHardCnt) {
-					fallbackHardCnt = cnt;
-					fallbackHardIdx = i;
-				}
-				if (cnt > fallbackEasyCnt) {
-					fallbackEasyCnt = cnt;
-					fallbackEasyIdx = i;
+					bestCnt = cnt;
+					foundExact = true;
+					break;
 				}
 			}
 		}
 
-		// Gab es *gar* keine Karte, die in den erlaubten Rahmen passt?
-		if (bestCpuIdx === -1) {
-			if (lead >= 0) { // Spieler führt → härtestes Fallback
-				bestCpuIdx = fallbackHardIdx;
-				bestCnt = fallbackHardCnt;
-			} else { // Spieler liegt hinten → leichtestes Fallback
-				bestCpuIdx = fallbackEasyIdx;
-				bestCnt = fallbackEasyCnt;
-			}
-		}
+		// Treffer mit exakt currentMaxWins gefunden ⇒ fertig
+		if (foundExact) break;
 
-		/* Wenn wir eine Karte ≤allowedWins gefunden haben, oder nach 20 Versuchen
-		   immer noch nicht – dann akzeptieren wir den aktuellen Kandidaten. */
-		if (bestCnt <= allowedWins || attempts >= 20) break;
+		// Kein exakter Treffer ⇒ Limit um ±1 anpassen (mindestens 0) und erneut versuchen
+		currentMaxWins = Math.max(0, currentMaxWins + step);
 	}
 
 	/* ---------- 2. Karten endgültig aus dem Deck entfernen ---------- */
 	playerCard = stats.splice(playerIdx, 1)[0];
-	// CPU‑Index korrigieren, falls er hinter der entfernten Spielerkarte lag
 	if (bestCpuIdx > playerIdx) bestCpuIdx--;
 	const cpuCard = stats.splice(bestCpuIdx, 1)[0];
 
@@ -236,12 +215,13 @@ function playCards() {
 	setCard("right", playerCard); // Home / Spieler
 	setCard("left", cpuCard); // Guest / CPU
 
-	/* ---------- 4. Debug‑Ausgabe ------------------------------------ */
+	/* ---------- 4. Debug-Ausgabe ------------------------------------ */
 	console.log("--- New Draw ---");
 	console.table({
 		attempts,
 		lead,
 		allowedWins,
+		limitUsed: currentMaxWins,
 		player: playerCard.player,
 		cpu: cpuCard.player,
 		"player-wins": bestCnt,
@@ -285,12 +265,9 @@ async function registerServiceWorker() {
 			`./service-worker.js?v=${serviceWorkerVersion}`,
 			{
 				scope: "./",
-				// updateViaCache is ignored by Safari but helps other browsers
 				updateViaCache: "none",
 			},
 		);
-		// Immediately ping for an update to catch fresh versions that may
-		// have been cached by the browser.
 		registration.update();
 		console.log(
 			"Service Worker registered with scope:",
@@ -307,7 +284,6 @@ async function unregisterServiceWorkers() {
 
 	await Promise.all(registrations.map((r) => r.unregister()));
 	console.log("All service workers unregistered – reloading page…");
-	// Hard reload to ensure starting without cache
 	globalThis.location.reload();
 }
 
