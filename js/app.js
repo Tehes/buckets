@@ -95,6 +95,9 @@ function compareValues(ev) {
 		document.querySelectorAll("output")[1].classList.add("animate");
 		values[1].classList.add("higher");
 		values[0].classList.add("lower");
+	} else {
+		values[0].classList.add("tie");
+		values[1].classList.add("tie");
 	}
 
 	setTimeout(resetCategory.bind(null, values), WAIT_TIME);
@@ -127,12 +130,19 @@ function checkClock() {
 		const leftScore = parseInt(scores[1].textContent);
 		const rightScore = parseInt(scores[3].textContent);
 		if (rightScore > leftScore) {
+			// Track win
+			globalThis.umami?.track("Buckets", { result: "Win" });
 			alert("You win!");
 		} else if (rightScore < leftScore) {
+			// Track loss
+			globalThis.umami?.track("Buckets", { result: "Lose" });
 			alert("You lose!");
+		} else {
+			// Optional: track draw to avoid a dead end
+			globalThis.umami?.track("Buckets", { result: "Draw" });
+			alert("It's a draw!");
 		}
-	} // game continues
-	else {
+	} else {
 		playCards();
 		document.addEventListener("click", compareValues, false);
 	}
@@ -174,29 +184,78 @@ function playCards() {
 	const step = lead >= 0 ? 1 : -1;
 
 	let foundExact = false; // true if we found a CPU card with exactly currentMaxWins
-	while (!foundExact) {
+	let limitBumps = 0;
+	const MAX_BUMPS = 20; // safety: stop after N limit adjustments
+
+	// track the closest candidate in case no exact match is found
+	let nearest = { diff: Infinity, cpuIdx: -1, cnt: null, playerIdxTmp: -1 };
+
+	while (!foundExact && limitBumps <= MAX_BUMPS) {
 		for (let tries = 0; tries < 20 && !foundExact; tries++) {
 			attempts++;
 
+			// draw a random player card for this attempt
 			playerIdx = Math.floor(Math.random() * stats.length);
 			playerCard = stats[playerIdx];
 
+			// collect all exact matches for this player card
+			const matches = [];
+
+			// scan possible CPU opponents
 			for (let i = 0; i < stats.length; i++) {
 				if (i === playerIdx) continue;
 				const cnt = playerWinsCnt(playerCard, stats[i]);
 
-				if (cnt === currentMaxWins) {
-					bestCpuIdx = i;
-					bestCnt = cnt;
-					foundExact = true;
-					break;
+				// keep nearest candidate to the current target
+				const diff = Math.abs(cnt - currentMaxWins);
+				if (
+					diff < nearest.diff ||
+					(diff === nearest.diff &&
+						// tie-breaker: when leading prefer tougher (higher cnt), when trailing prefer gentler (lower cnt)
+						((lead >= 0 && cnt > (nearest.cnt ?? -Infinity)) ||
+							(lead < 0 && cnt < (nearest.cnt ?? Infinity))))
+				) {
+					nearest = { diff, cpuIdx: i, cnt, playerIdxTmp: playerIdx };
 				}
+
+				// collect exact hits; decide after scanning all CPU cards to avoid always picking the earliest index
+				if (cnt === currentMaxWins) {
+					matches.push(i);
+				}
+			}
+			// if we found any exact matches for this player card, pick one at random
+			if (!foundExact && matches.length > 0) {
+				const pick = Math.floor(Math.random() * matches.length);
+				bestCpuIdx = matches[pick];
+				bestCnt = currentMaxWins; // equals cnt for exact matches
+				foundExact = true;
+				// remember the player card that yielded the exact match
+				nearest.playerIdxTmp = playerIdx;
 			}
 		}
 
-		// adjust limit only if still not found
+		// adjust limit only if still not found (with clamp 0..categories.length)
 		if (!foundExact) {
-			currentMaxWins = Math.max(0, currentMaxWins + step);
+			currentMaxWins = Math.max(0, Math.min(categories.length, currentMaxWins + step));
+			limitBumps++;
+		}
+	}
+
+	// fallback: use the nearest candidate if no exact match after MAX_BUMPS
+	if (!foundExact && nearest.cpuIdx !== -1) {
+		bestCpuIdx = nearest.cpuIdx;
+		bestCnt = nearest.cnt;
+		playerIdx = nearest.playerIdxTmp;
+	}
+
+	// final guard: ensure we always have a CPU card different from the player card
+	if (bestCpuIdx === -1) {
+		for (let i = 0; i < stats.length; i++) {
+			if (i !== playerIdx) {
+				bestCpuIdx = i;
+				bestCnt = playerWinsCnt(stats[playerIdx], stats[i]);
+				break;
+			}
 		}
 	}
 

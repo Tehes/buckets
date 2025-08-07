@@ -186,6 +186,11 @@ main li:nth-of-type(odd) {
     text-shadow: 1px 1px 1px hsla(0, 0%, 0%, 0.3);
 }
 
+.tie {
+    color: hsl(50, 100%, 50%) !important;
+    text-shadow: 1px 1px 1px hsla(0, 0%, 0%, 0.3);
+}
+
 abbr {
     text-decoration: none;
     position: relative;
