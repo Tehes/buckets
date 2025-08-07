@@ -105,8 +105,8 @@ function compareValues(ev) {
 
 function resetCategory(values) {
 	values[0].textContent = "---";
-	values[0].classList.remove("higher", "lower");
-	values[1].classList.remove("higher", "lower");
+	values[0].classList.remove("higher", "lower", "tie");
+	values[1].classList.remove("higher", "lower", "tie");
 
 	checkClock();
 }
