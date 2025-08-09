@@ -44,7 +44,7 @@ function setTheme(side, teamVar) {
 	document.documentElement.style.setProperty(`--bg-${side}`, teamColor);
 
 	const meta = document.querySelector('meta[name="theme-color"]');
-	if (meta) meta.setAttribute("content", teamColor);
+	if (side === "right" && meta) meta.setAttribute("content", teamColor);
 }
 
 function setCard(side, data) {
