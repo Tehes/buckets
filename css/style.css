@@ -429,7 +429,7 @@ MEDIA QUERIES
     main {
         flex-direction: column;
         align-items: center;
-        gap: 2vw;
+        gap: 2vh;
     }
 
     .img-bg {
