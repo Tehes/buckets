@@ -51,7 +51,7 @@
 }
 
 html {
-    background-color: var(--bg-left);
+    background-color: var(--bg-right);
     -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
     height: 100vh;
 }
