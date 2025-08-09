@@ -44,7 +44,12 @@ function setTheme(side, teamVar) {
 	document.documentElement.style.setProperty(`--bg-${side}`, teamColor);
 
 	const meta = document.querySelector('meta[name="theme-color"]');
-	if (side === "right" && meta) meta.setAttribute("content", teamColor);
+	if (globalThis.matchMedia("(max-width: 480px)").matches) {
+		if (side === "right" && meta) meta.setAttribute("content", teamColor);
+	} else {
+		// Desktop: z. B. immer auf bg-left setzen
+		if (side === "left" && meta) meta.setAttribute("content", teamColor);
+	}
 }
 
 function setCard(side, data) {

@@ -77,7 +77,7 @@ body {
 }
 
 body {
-    background: linear-gradient(135deg,
+    background: linear-gradient(0deg,
             var(--bg-left),
             var(--bg-right));
     user-select: none;
