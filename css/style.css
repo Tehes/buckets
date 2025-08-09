@@ -58,14 +58,14 @@ body {
     padding: 0;
 }
 
-@supports (height: 100vh) {
+@supports (height: 100dvh) {
 
     body {
-        height: 100vh;
+        height: 100dvh;
     }
 }
 
-@supports not (height: 100vh) {
+@supports not (height: 100dvh) {
 
     body {
         height: -webkit-fill-available;
@@ -420,6 +420,7 @@ MEDIA QUERIES
     main {
         flex-direction: column;
         align-items: center;
+        gap: 2vw;
     }
 
     .img-bg {
@@ -453,7 +454,8 @@ MEDIA QUERIES
     main li {
         font-size: 1em;
         width: 12%;
-        margin: 0.2vh 0;
+        margin: 0;
+        padding: 0.2vmin 0;
     }
 
     aside output {
