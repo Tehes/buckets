@@ -50,6 +50,7 @@
 
 html {
     -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+    height: 100vh;
 }
 
 body {
@@ -131,7 +132,7 @@ section {
     display: flex;
     justify-content: center;
     align-items: center;
-    padding-top: 3%;
+    padding-top: 1.1vh;
     position: relative;
     background-size: 30%, auto;
     background-repeat: no-repeat;
@@ -417,6 +418,12 @@ MEDIA QUERIES
 }
 
 @media only screen and (max-width: 480px) {
+    body {
+        background: linear-gradient(180deg,
+                var(--bg-left),
+                var(--bg-right));
+    }
+
     main {
         flex-direction: column;
         align-items: center;
@@ -424,8 +431,8 @@ MEDIA QUERIES
     }
 
     .img-bg {
-        height: 35.7vw;
-        background-size: 22%, auto;
+        height: 35vw;
+        background-size: 20%, auto;
     }
 
     .img-bg img {
@@ -455,7 +462,7 @@ MEDIA QUERIES
         font-size: 1em;
         width: 12%;
         margin: 0;
-        padding: 0.2vmin 0;
+        padding: 0.6vmin 0;
     }
 
     aside output {
