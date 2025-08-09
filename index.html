@@ -104,7 +104,75 @@
             </output>
             <div class="players">HOME</div>
         </div>
-        <div id="time"><span class="quarter">1st</span>&nbsp;-&nbsp;<span class="clock">12</span>:00</div>
+        <div id="time">
+            <img id="helpBtn" src="icons/help-svgrepo-com.svg" alt="">
+            <div>
+                <span class="quarter">1st</span>&nbsp;-&nbsp;
+                <span class="clock">12</span>:00
+            </div>
+            <img id="settingsBtn" src="icons/sliders-svgrepo-com.svg" alt="">
+        </div>
+    </aside>
+    <!-- Backdrop -->
+    <div class="backdrop hidden" id="backdrop"></div>
+
+    <!-- HowTo Modal -->
+    <aside class="modal hidden" id="howtoModal" role="dialog" aria-modal="true" aria-labelledby="howtoTitle">
+        <div class="modal__header">
+            <h2 id="howtoTitle">Instructions</h2>
+            <button class="modal__close" id="howtoClose" aria-label="Close">
+                <img src="icons/clear-svgrepo-com.svg" alt="Close">
+            </button>
+        </div>
+        <div class="modal__body">
+            <p>You play as HOME. Your card is on the right (desktop) or at the
+                bottom (mobile). The opponent (GUEST) is on the other side.
+            </p>
+
+            <h3>How to play</h3>
+            <ol>
+                <li>Choose one stat on your HOME card</li>
+                <li>The opponent’s stat in the same category is revealed.</li>
+                <li>The higher value wins the round.</li>
+                <li>After each round, the game clock decreases by 1 minute.<br>
+                    12 minutes = 1 quarter · 4 quarters = full game.</li>
+                <li>When the game ends, the player with the most points wins.</li>
+            </ol>
+
+            <p>New round, new cards: At the start of every round, both you and your opponent get a new
+                player card.<br>
+                – Your HOME card is random.<br>
+                – The GUEST card is chosen based on the current score difference: if you’re ahead, you’ll face tougher
+                opponents; if you’re behind, you’ll get easier ones.</p>
+
+            <h3>Color legend</h3>
+            <ul>
+                <li>Green on HOME → you score</li>
+                <li>Green on GUEST → opponent scores</li>
+                <li>Yellow → tie (no points)</li>
+                <li>Red → loses the round</li>
+            </ul>
+
+            <h3>Scoring by stat</h3>
+            <ul>
+                <li>1 point: FT%, GP, MIN</li>
+                <li>3 points: 3PM, 3P%</li>
+                <li>2 points: all others (PTS, REB, AST, STL, BLK, FG%, EFF, …)</li>
+            </ul>
+        </div>
+    </aside>
+
+    <!-- Settings Modal -->
+    <aside class="modal hidden" id="settingsModal" role="dialog" aria-modal="true" aria-labelledby="settingsTitle">
+        <div class="modal__header">
+            <h2 id="settingsTitle">Settings</h2>
+            <button class="modal__close" id="settingsClose" aria-label="Close">
+                <img src="icons/clear-svgrepo-com.svg" alt="Close">
+            </button>
+        </div>
+        <div class="modal__body">
+            <p>under construction ...</p>
+        </div>
     </aside>
     <script type="module" src="./js/app.js"></script>
 </body>

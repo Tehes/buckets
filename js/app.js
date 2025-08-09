@@ -23,6 +23,16 @@ const categories = [
 
 const WAIT_TIME = 3000; // time in ms to wait before next action
 
+const main = document.querySelector("main");
+const backdrop = document.getElementById("backdrop");
+const howtoModal = document.getElementById("howtoModal");
+const settingsModal = document.getElementById("settingsModal");
+
+const helpBtn = document.getElementById("helpBtn");
+const settingsBtn = document.getElementById("settingsBtn");
+const howtoClose = document.getElementById("howtoClose");
+const settingsClose = document.getElementById("settingsClose");
+
 /* --------------------------------------------------------------------------------------------------
 functions
 ---------------------------------------------------------------------------------------------------*/
@@ -284,10 +294,29 @@ function updateScore(ev) {
 	ev.target.classList.remove("animate");
 }
 
+function open(modal) {
+	modal.classList.remove("hidden");
+	backdrop.classList.remove("hidden");
+}
+function closeAll() {
+	howtoModal.classList.add("hidden");
+	settingsModal.classList.add("hidden");
+	backdrop.classList.add("hidden");
+}
+
 function init() {
 	document.addEventListener("touchstart", function () {}, false);
-	document.addEventListener("click", compareValues, false);
+	main.addEventListener("click", compareValues, false);
 	document.addEventListener("animationend", updateScore, false);
+
+	helpBtn.addEventListener("click", () => open(howtoModal));
+	settingsBtn.addEventListener("click", () => open(settingsModal));
+	backdrop.addEventListener("click", closeAll);
+	howtoClose.addEventListener("click", closeAll);
+	settingsClose.addEventListener("click", closeAll);
+	document.addEventListener("keydown", (e) => {
+		if (e.key === "Escape") closeAll();
+	});
 
 	playCards();
 }
