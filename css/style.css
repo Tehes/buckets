@@ -51,7 +51,7 @@
 }
 
 html {
-    background-color: var(--bg-right);
+    background-color: var(--bg-left);
     -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
     height: 100vh;
 }
@@ -420,10 +420,10 @@ MEDIA QUERIES
 @media only screen and (max-width: 480px) {
     body {
         background: linear-gradient(to bottom,
-                var(--bg-right) 0%,
-                var(--bg-left) 15%,
-                var(--bg-left) 60%,
-                var(--bg-right) 100%);
+                var(--bg-left) 0%,
+                var(--bg-right) 15%,
+                var(--bg-right) 85%,
+                var(--bg-left) 100%);
     }
 
     main {
