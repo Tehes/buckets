@@ -45,6 +45,7 @@ function setCard(side, data) {
 
 	// set background Color
 	document.body.style.setProperty(`--bg-${side}`, `var(--${data.team})`);
+	document.documentElement.style.setProperty(`--bg-${side}`, `var(--${data.team})`);
 	// set team logo
 	card.background.style.setProperty(
 		`--bg-img`,
