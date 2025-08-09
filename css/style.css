@@ -21,7 +21,7 @@
     --DAL: #0053bc;
     --DEN: #0e2240;
     --DET: #c8102e;
-    --GSW: #ffc72c;
+    --GSW: #1d428a;
     --HOU: #ce1141;
     --IND: #002d62;
     --LAC: #c8102e;
@@ -51,7 +51,7 @@
 }
 
 html {
-    background-color: var(--bg-left);
+    background-color: var(--bg-right);
     -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
     height: 100vh;
 }
@@ -419,11 +419,7 @@ MEDIA QUERIES
 
 @media only screen and (max-width: 480px) {
     body {
-        background: linear-gradient(to bottom,
-                var(--bg-left) 0%,
-                var(--bg-right) 15%,
-                var(--bg-right) 85%,
-                var(--bg-left) 100%);
+        background: var(--bg-right);
     }
 
     main {
