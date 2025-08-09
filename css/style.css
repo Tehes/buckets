@@ -419,9 +419,11 @@ MEDIA QUERIES
 
 @media only screen and (max-width: 480px) {
     body {
-        background: linear-gradient(180deg,
-                var(--bg-left),
-                var(--bg-right));
+        background: linear-gradient(to bottom,
+                var(--bg-right) 0%,
+                var(--bg-left) 15%,
+                var(--bg-left) 60%,
+                var(--bg-right) 100%);
     }
 
     main {
