@@ -36,6 +36,17 @@ const settingsClose = document.getElementById("settingsClose");
 /* --------------------------------------------------------------------------------------------------
 functions
 ---------------------------------------------------------------------------------------------------*/
+function setTheme(side, teamVar) {
+	const teamColor = getComputedStyle(document.documentElement)
+		.getPropertyValue(`--${teamVar}`)
+		.trim();
+
+	document.documentElement.style.setProperty(`--bg-${side}`, teamColor);
+
+	const meta = document.querySelector('meta[name="theme-color"]');
+	if (meta) meta.setAttribute("content", teamColor);
+}
+
 function setCard(side, data) {
 	const card = document.querySelector(`.${side}`);
 	card.team = card.querySelector("h2");
@@ -43,9 +54,9 @@ function setCard(side, data) {
 	card.playerName = card.querySelector("h1");
 	card.background = card.querySelector(".img-bg");
 
-	// set background Color
-	document.body.style.setProperty(`--bg-${side}`, `var(--${data.team})`);
-	document.documentElement.style.setProperty(`--bg-${side}`, `var(--${data.team})`);
+	// set Theme Color
+	setTheme(side, data.team);
+
 	// set team logo
 	card.background.style.setProperty(
 		`--bg-img`,
