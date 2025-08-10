@@ -85,7 +85,7 @@ body {
     font-size: 100%;
     font-family: 'Kanit', sans-serif;
     display: flex;
-    justify-content: space-evenly;
+    justify-content: flex-start;
     align-items: center;
     flex-direction: column;
     transition: background-color 1s;
@@ -106,7 +106,10 @@ main {
     width: 95vw;
     display: flex;
     justify-content: center;
-    gap: 5vw;
+    align-items: center;
+    gap: 3dvh;
+    margin: 3dvh 0 16dvh 0;
+    height: 100%;
 }
 
 section {
@@ -204,11 +207,11 @@ abbr {
 
 /*
 -------------------------------------------------------------------
-ASIDE
+FOOTER
 -------------------------------------------------------------------
 */
 
-aside {
+footer {
     background-color: var(--bg-color-dark);
     border-radius: var(--rounded-corners);
     display: flex;
@@ -216,6 +219,12 @@ aside {
     flex-direction: column;
     box-shadow: var(--drop-shadow);
     border: var(--border);
+    position: absolute;
+    bottom: 3dvh;
+    backdrop-filter: blur(12px);
+    width: 90vw;
+    max-width: 550px;
+    max-height: 94%;
 }
 
 .scoreboard {
@@ -232,7 +241,7 @@ aside {
     font-weight: 700;
 }
 
-aside output {
+footer output {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -240,7 +249,7 @@ aside output {
     width: 14vmin;
 }
 
-aside output span {
+footer output span {
     font-size: 10vmin;
     color: var(--text-brighter);
     line-height: 1;
@@ -311,33 +320,20 @@ MODAL
 -------------------------------------------------------------------
 */
 .hidden {
-    display: none !important;
-}
-
-.backdrop {
-    position: fixed;
-    inset: 0;
-    z-index: 900;
-    background: hsla(0, 0%, 0%, 0.3);
-    color: var(--font-color);
+    max-height: 0 !important;
+    overflow: hidden !important;
+    margin: 0 !important;
 }
 
 .modal {
-    position: absolute;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    transform: translateX(-50%), translateY(-50%);
-    width: min(90vw, 960px);
-    max-height: 95svh;
-    background: var(--bg-backdrop);
-    border: var(--border);
-    border-radius: var(--rounded-corners);
-    box-shadow: var(--drop-shadow);
-    z-index: 1000;
+    max-height: 100dvh;
     color: var(--text-brighter);
-    backdrop-filter: blur(12px);
+    overflow: auto;
+    transition: all 0.5s ease-in-out;
+    background-color: hsla(0, 0%, 0%, 0.2);
+    border-radius: var(--rounded-corners);
+    margin: 1vmin;
+    will-change: max-height;
 }
 
 .modal__header {
@@ -423,7 +419,7 @@ MEDIA QUERIES
     main {
         flex-direction: column;
         align-items: center;
-        gap: 2vh;
+        gap: 3dvh;
     }
 
     .img-bg {
