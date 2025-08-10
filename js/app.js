@@ -31,6 +31,100 @@ const helpBtn = document.getElementById("helpBtn");
 const settingsBtn = document.getElementById("settingsBtn");
 const howtoClose = document.getElementById("howtoClose");
 const settingsClose = document.getElementById("settingsClose");
+const calloutLeft = document.querySelector("section.left  .callout");
+const calloutRight = document.querySelector("section.right .callout");
+
+/* --------------------------------------------------------------------------------------------------
+Phrases for callouts
+---------------------------------------------------------------------------------------------------*/
+const PHRASES = {
+	pts: {
+		player: ["Buckets!", "He can't be stopped!", "Pure scoring clinic!"],
+		cpu: ["Stone-cold denial!", "Locked up!", "Ice in the veins—on defense!"],
+		tie: ["All square on the board.", "Dead even!", "Nothing between them."],
+	},
+	fgp: {
+		player: ["Efficiency king!", "Cooking with premium octane!", "Clean looks, clean makes!"],
+		cpu: ["Smothered at the rim!", "Hands in faces all night!", "Cold spell strikes back."],
+		tie: ["Neck and neck from the field.", "Even efficiency!", "Shot-for-shot!"],
+	},
+	"3pm": {
+		player: ["From downtown!", "Splash!", "Rainmaker!"],
+		cpu: ["Answer from deep!", "Right back at you!", "Silences the crowd!"],
+		tie: ["Traded triples!", "Even from three!", "Perimeter stalemate."],
+	},
+	"3pp": {
+		player: ["Flamethrower from deep!", "Laser-guided threes!", "Heating up beyond the arc!"],
+		cpu: ["Cooled off from range…", "Hands bother the release!", "Arc goes quiet."],
+		tie: ["Even snipers tonight.", "Deadlocked from distance.", "Same clip from three!"],
+	},
+	ftp: {
+		player: ["Money at the line!", "Automatic!", "Cash money free throws!"],
+		cpu: ["Rims out under pressure!", "Leaving points at the stripe…", "Charity stripe goes cold."],
+		tie: ["Even at the stripe.", "Both steady at the line.", "Level from the charity stripe."],
+	},
+	gp: {
+		player: ["Ironman numbers!", "Availability is a skill!", "Built different!"],
+		cpu: ["Durability edge goes the other way!", "Wear and tear shows!", "Grinding season bites back."],
+		tie: ["Durability deadlock.", "Even availability.", "Both show up!"],
+	},
+	min: {
+		player: ["Workhorse minutes!", "Coach trusts him big time!", "Heavy load, big impact!"],
+		cpu: ["Short leash minutes…", "Bench calls quicker tonight.", "Rotations trim the runway."],
+		tie: ["Even run time.", "Same leash length.", "Minutes match-up dead even."],
+	},
+	reb: {
+		player: ["Clears the glass!", "Boards on boards!", "Owns the paint!"],
+		cpu: ["Second chance shut down!", "Boxed out!", "Glass belongs to the other side."],
+		tie: ["Board battle even.", "Fifty-fifty on the glass.", "Nothing split on rebounds."],
+	},
+	ast: {
+		player: ["Dime time!", "Threading needles!", "Playmaking masterclass!"],
+		cpu: ["Passing lanes sealed!", "No look, no dice!", "Reads taken away!"],
+		tie: ["Equal distribution.", "Sharing is caring—both sides!", "Assist game level."],
+	},
+	stl: {
+		player: ["Pickpocket!", "Cookies!", "Turns defense into offense!"],
+		cpu: ["Telegraphed and taken!", "Got stripped!", "Live-ball turnover hurts!"],
+		tie: ["Hands everywhere—both teams!", "Even takeaway tally.", "Steal count knotted up."],
+	},
+	blk: {
+		player: ["Rejected!", "Not in my house!", "Met at the summit!"],
+		cpu: ["Shot sent back!", "Stuffed at the rim!", "Told 'nope' upstairs!"],
+		tie: ["Rim protection even.", "Paint police on both ends.", "Block party split 50/50."],
+	},
+	eff: {
+		player: ["All-around impact!", "Stuffing the stat sheet!", "Winning plays everywhere!"],
+		cpu: ["Impact swings the other way!", "Loud box score on the other side!", "Edge in the little things!"],
+		tie: ["All-around dead even.", "Total impact balances out.", "Neck-and-neck on efficiency."],
+	},
+};
+
+function showToast(el, message) {
+	if (!el) return;
+	el.textContent = message;
+	el.classList.remove("hidden");
+	setTimeout(() => el.classList.add("hidden"), WAIT_TIME);
+}
+
+/**
+ * Show a phrase inside a specific card area.
+ * target: 'left' | 'right' | 'both'
+ */
+function openCallout(message, target = "right") {
+	if (target === "left") return showToast(calloutLeft, message);
+	if (target === "right") return showToast(calloutRight, message);
+	if (target === "both") {
+		showToast(calloutLeft, message);
+		showToast(calloutRight, message);
+		return;
+	}
+}
+
+function getPhrase(category, outcome) {
+	const arr = PHRASES?.[category]?.[outcome] || [];
+	return arr.length ? arr[Math.floor(Math.random() * arr.length)] : "";
+}
 
 /* --------------------------------------------------------------------------------------------------
 functions
@@ -103,11 +197,9 @@ function compareValues(ev) {
 	const rightScore = scores[3];
 
 	let points = 2;
-	// Lower‑impact categories count only 1 point
 	if (category === "ftp" || category === "gp" || category === "min") {
 		points = 1;
-	} // High‑variance 3‑point stats are worth 3
-	else if (category === "3pm" || category === "3pp") {
+	} else if (category === "3pm" || category === "3pp") {
 		points = 3;
 	}
 
@@ -116,14 +208,17 @@ function compareValues(ev) {
 		document.querySelectorAll("output")[0].classList.add("animate");
 		values[0].classList.add("higher");
 		values[1].classList.add("lower");
+		openCallout(getPhrase(category, "cpu"), "left");
 	} else if (rightValue > leftValue) {
 		rightScore.textContent = parseInt(rightScore.textContent) + points;
 		document.querySelectorAll("output")[1].classList.add("animate");
 		values[1].classList.add("higher");
 		values[0].classList.add("lower");
+		openCallout(getPhrase(category, "player"), "right");
 	} else {
 		values[0].classList.add("tie");
 		values[1].classList.add("tie");
+		openCallout(getPhrase(category, "tie"), "both");
 	}
 
 	setTimeout(resetCategory.bind(null, values), WAIT_TIME);
@@ -312,6 +407,7 @@ function updateScore(ev) {
 
 function open(modal) {
 	modal.classList.remove("hidden");
+	modal.setAttribute("aria-hidden", "false");
 }
 function close(modal) {
 	modal.classList.add("hidden");
