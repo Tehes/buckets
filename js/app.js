@@ -313,9 +313,9 @@ function updateScore(ev) {
 function open(modal) {
 	modal.classList.remove("hidden");
 }
-function closeAll() {
-	howtoModal.classList.add("hidden");
-	settingsModal.classList.add("hidden");
+function close(modal) {
+	modal.classList.add("hidden");
+	modal.setAttribute("aria-hidden", "true");
 }
 
 function init() {
@@ -325,11 +325,8 @@ function init() {
 
 	helpBtn.addEventListener("click", () => open(howtoModal));
 	settingsBtn.addEventListener("click", () => open(settingsModal));
-	howtoClose.addEventListener("click", closeAll);
-	settingsClose.addEventListener("click", closeAll);
-	document.addEventListener("keydown", (e) => {
-		if (e.key === "Escape") closeAll();
-	});
+	howtoClose.addEventListener("click", () => close(howtoModal));
+	settingsClose.addEventListener("click", () => close(settingsModal));
 
 	playCards();
 }
