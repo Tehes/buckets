@@ -113,7 +113,8 @@ main {
 }
 
 section {
-    width: 45vmin;
+    width: 90vmin;
+    max-width: 410px;
     height: 55vmin;
     background-color: var(--bg-color);
     border-radius: var(--rounded-corners);
@@ -233,6 +234,7 @@ footer {
     justify-content: space-around;
     align-items: center;
     overflow: hidden;
+    min-height: 45px;
 }
 
 .players {
@@ -458,7 +460,6 @@ MEDIA QUERIES
     }
 
     section {
-        width: 90vw;
         height: max-content;
         position: relative;
     }
