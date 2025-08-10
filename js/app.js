@@ -22,10 +22,12 @@ const categories = [
 ];
 
 const WAIT_TIME = 3000; // time in ms to wait before next action
+let TICK_SIZE = 1; // minutes to decrement per matchup (1 = default)
 
 const main = document.querySelector("main");
 const howtoModal = document.getElementById("howtoModal");
 const settingsModal = document.getElementById("settingsModal");
+const settingsForm = document.getElementById("settingsForm");
 
 const helpBtn = document.getElementById("helpBtn");
 const settingsBtn = document.getElementById("settingsBtn");
@@ -237,36 +239,39 @@ function checkClock() {
 	const quarter = document.querySelector(".quarter");
 	const q = ["1st", "2nd", "3rd", "4th"];
 	let i = parseInt(quarter.textContent[0]) - 1;
-	clock.textContent = parseInt(clock.textContent) - 1;
+	const current = parseInt(clock.textContent);
+	const next = current - TICK_SIZE;
 
-	// if quarter is over
-	if (clock.textContent === "0" && i < 3) {
-		clock.textContent = "12";
-		i++;
-		quarter.textContent = q[i];
-	}
-	// If game is over
-	if (clock.textContent === "0" && i === 3) {
+	// If game is over condition (4th quarter crossing <= 0)
+	if (i === 3 && next <= 0) {
 		const scores = document.querySelectorAll("output span");
 		const leftScore = parseInt(scores[1].textContent);
 		const rightScore = parseInt(scores[3].textContent);
 		if (rightScore > leftScore) {
-			// Track win
 			globalThis.umami?.track("Buckets", { result: "Win" });
 			alert("You win!");
 		} else if (rightScore < leftScore) {
-			// Track loss
 			globalThis.umami?.track("Buckets", { result: "Lose" });
 			alert("You lose!");
 		} else {
-			// Optional: track draw to avoid a dead end
 			globalThis.umami?.track("Buckets", { result: "Draw" });
 			alert("It's a draw!");
 		}
-	} else {
-		playCards();
-		document.addEventListener("click", compareValues, false);
+		return; // stop here when game ends
 	}
+
+	// Quarter handling before the 4th
+	if (next > 0) {
+		clock.textContent = String(next);
+	} else {
+		// roll to next quarter and reset to 12
+		i = Math.min(i + 1, 3);
+		quarter.textContent = q[i];
+		clock.textContent = "12";
+	}
+
+	playCards();
+	document.addEventListener("click", compareValues, false);
 }
 
 function playerWinsCnt(playerCard, cpuCard) {
@@ -423,6 +428,16 @@ function init() {
 	settingsBtn.addEventListener("click", () => open(settingsModal));
 	howtoClose.addEventListener("click", () => close(howtoModal));
 	settingsClose.addEventListener("click", () => close(settingsModal));
+
+	settingsForm.addEventListener("change", (e) => {
+		const t = e.target;
+		if (t && t.name === "tickSize") {
+			const val = parseInt(t.value, 10);
+			if (val === 1 || val === 2 || val === 4) {
+				TICK_SIZE = val;
+			}
+		}
+	});
 
 	playCards();
 }

@@ -131,8 +131,8 @@
                     <li>Choose one stat on your HOME card</li>
                     <li>The opponent’s stat in the same category is revealed.</li>
                     <li>The higher value wins the round.</li>
-                    <li>After each round, the game clock decreases by 1 minute.<br>
-                        12 minutes = 1 quarter · 4 quarters = full game.</li>
+                    <li>After each round, the game clock decreases by the amount set in the Settings (default: 1
+                        minute).</li>
                     <li>When the game ends, the player with the most points wins.</li>
                 </ol>
 
@@ -169,7 +169,27 @@
                 </button>
             </div>
             <div class="modal__body">
-                <p>under construction ...</p>
+                <form id="settingsForm">
+                    <fieldset>
+                        <legend id="tickLegend">Clock decrement per matchup</legend>
+                        <!-- Radio group: how many minutes the game clock decreases after each comparison -->
+                        <div role="radiogroup" aria-labelledby="tickLegend">
+                            <label for="tick1">
+                                <input type="radio" name="tickSize" id="tick1" value="1" checked>
+                                1 minute
+                            </label>
+                            <label for="tick2" style="margin-left:1rem">
+                                <input type="radio" name="tickSize" id="tick2" value="2">
+                                2 minutes
+                            </label>
+                            <label for="tick4" style="margin-left:1rem">
+                                <input type="radio" name="tickSize" id="tick4" value="4">
+                                4 minutes
+                            </label>
+                        </div>
+                        <p class="note">Takes effect from the next round.</p>
+                    </fieldset>
+                </form>
             </div>
         </aside>
     </footer>
