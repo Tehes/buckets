@@ -113,8 +113,7 @@ main {
 }
 
 section {
-    width: 90vmin;
-    max-width: 480px;
+    width: 45vmin;
     height: 55vmin;
     background-color: var(--bg-color);
     border-radius: var(--rounded-corners);
@@ -466,6 +465,7 @@ MEDIA QUERIES
     section {
         height: max-content;
         position: relative;
+        width: 90vw;
     }
 
     main h1 {
