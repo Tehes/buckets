@@ -114,7 +114,7 @@ main {
 
 section {
     width: 90vmin;
-    max-width: 410px;
+    max-width: 480px;
     height: 55vmin;
     background-color: var(--bg-color);
     border-radius: var(--rounded-corners);
@@ -169,7 +169,6 @@ main ul {
 main li {
     font-size: 1.8vmin;
     padding: 0.35vmin 0;
-
     width: 20%;
     transition: color 0.5s;
 }
