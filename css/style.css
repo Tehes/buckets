@@ -329,7 +329,7 @@ MODAL
 
 .modal:not(.hidden) {
     overflow: auto;
-    min-height: 120px;
+    min-height: 190px;
 }
 
 .modal {
@@ -588,6 +588,10 @@ MEDIA QUERIES
     .players {
         font-size: 1.2rem;
         padding: 0 0.5rem;
+    }
+
+    .modal:not(.hidden) {
+        min-height: 250px;
     }
 
     #settingsForm [role="radiogroup"] {

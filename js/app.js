@@ -40,66 +40,18 @@ const calloutRight = document.querySelector("section.right .callout");
 Phrases for callouts
 ---------------------------------------------------------------------------------------------------*/
 const PHRASES = {
-	pts: {
-		player: ["Buckets!", "He can't be stopped!", "Pure scoring clinic!"],
-		cpu: ["Stone-cold denial!", "Locked up!", "Ice in the veins—on defense!"],
-		tie: ["All square on the board.", "Dead even!", "Nothing between them."],
-	},
-	fgp: {
-		player: ["Efficiency king!", "Cooking with premium octane!", "Clean looks, clean makes!"],
-		cpu: ["Smothered at the rim!", "Hands in faces all night!", "Cold spell strikes back."],
-		tie: ["Neck and neck from the field.", "Even efficiency!", "Shot-for-shot!"],
-	},
-	"3pm": {
-		player: ["From downtown!", "Splash!", "Rainmaker!"],
-		cpu: ["Answer from deep!", "Right back at you!", "Silences the crowd!"],
-		tie: ["Traded triples!", "Even from three!", "Perimeter stalemate."],
-	},
-	"3pp": {
-		player: ["Flamethrower from deep!", "Laser-guided threes!", "Heating up beyond the arc!"],
-		cpu: ["Cooled off from range…", "Hands bother the release!", "Arc goes quiet."],
-		tie: ["Even snipers tonight.", "Deadlocked from distance.", "Same clip from three!"],
-	},
-	ftp: {
-		player: ["Money at the line!", "Automatic!", "Cash money free throws!"],
-		cpu: ["Rims out under pressure!", "Leaving points at the stripe…", "Charity stripe goes cold."],
-		tie: ["Even at the stripe.", "Both steady at the line.", "Level from the charity stripe."],
-	},
-	gp: {
-		player: ["Ironman numbers!", "Availability is a skill!", "Built different!"],
-		cpu: ["Durability edge goes the other way!", "Wear and tear shows!", "Grinding season bites back."],
-		tie: ["Durability deadlock.", "Even availability.", "Both show up!"],
-	},
-	min: {
-		player: ["Workhorse minutes!", "Coach trusts him big time!", "Heavy load, big impact!"],
-		cpu: ["Short leash minutes…", "Bench calls quicker tonight.", "Rotations trim the runway."],
-		tie: ["Even run time.", "Same leash length.", "Minutes match-up dead even."],
-	},
-	reb: {
-		player: ["Clears the glass!", "Boards on boards!", "Owns the paint!"],
-		cpu: ["Second chance shut down!", "Boxed out!", "Glass belongs to the other side."],
-		tie: ["Board battle even.", "Fifty-fifty on the glass.", "Nothing split on rebounds."],
-	},
-	ast: {
-		player: ["Dime time!", "Threading needles!", "Playmaking masterclass!"],
-		cpu: ["Passing lanes sealed!", "No look, no dice!", "Reads taken away!"],
-		tie: ["Equal distribution.", "Sharing is caring—both sides!", "Assist game level."],
-	},
-	stl: {
-		player: ["Pickpocket!", "Cookies!", "Turns defense into offense!"],
-		cpu: ["Telegraphed and taken!", "Got stripped!", "Live-ball turnover hurts!"],
-		tie: ["Hands everywhere—both teams!", "Even takeaway tally.", "Steal count knotted up."],
-	},
-	blk: {
-		player: ["Rejected!", "Not in my house!", "Met at the summit!"],
-		cpu: ["Shot sent back!", "Stuffed at the rim!", "Told 'nope' upstairs!"],
-		tie: ["Rim protection even.", "Paint police on both ends.", "Block party split 50/50."],
-	},
-	eff: {
-		player: ["All-around impact!", "Stuffing the stat sheet!", "Winning plays everywhere!"],
-		cpu: ["Impact swings the other way!", "Loud box score on the other side!", "Edge in the little things!"],
-		tie: ["All-around dead even.", "Total impact balances out.", "Neck-and-neck on efficiency."],
-	},
+	pts: ["Buckets!", "Can’t be stopped!", "Scoring clinic!"],
+	fgp: ["Ultra efficient!", "Clinical finishing!", "Knocks down shots!"],
+	"3pm": ["From downtown!", "Splash!", "Bang!"],
+	"3pp": ["On fire from deep!", "Can’t miss from three!", "Stays hot from range!"],
+	ftp: ["Money at the line!", "Automatic at the stripe!", "Pure at the line!"],
+	gp: ["Ironman!", "Shows up nightly!", "Durability edge!"],
+	min: ["Workhorse minutes!", "Big minutes tonight!", "Coach trusts him."],
+	reb: ["Owns the glass!", "Clears the boards!", "Owns the paint!"],
+	ast: ["Dime time!", "Finds the open man!", "Table setter!"],
+	stl: ["Picks his pocket!", "Takes it away!", "Turns defense to offense!"],
+	blk: ["Stuffed at the rim!", "Sends it back!", "Denied at the summit!"],
+	eff: ["All-around impact!", "Stuffing the stat sheet!", "Doing it all!"],
 };
 
 function showToast(el, message) {
@@ -123,8 +75,8 @@ function openCallout(message, target = "right") {
 	}
 }
 
-function getPhrase(category, outcome) {
-	const arr = PHRASES?.[category]?.[outcome] || [];
+function getPhrase(category) {
+	const arr = PHRASES?.[category] || [];
 	return arr.length ? arr[Math.floor(Math.random() * arr.length)] : "";
 }
 
@@ -210,17 +162,16 @@ function compareValues(ev) {
 		document.querySelectorAll("output")[0].classList.add("animate");
 		values[0].classList.add("higher");
 		values[1].classList.add("lower");
-		openCallout(getPhrase(category, "cpu"), "left");
+		openCallout(getPhrase(category), "left");
 	} else if (rightValue > leftValue) {
 		rightScore.textContent = parseInt(rightScore.textContent) + points;
 		document.querySelectorAll("output")[1].classList.add("animate");
 		values[1].classList.add("higher");
 		values[0].classList.add("lower");
-		openCallout(getPhrase(category, "player"), "right");
+		openCallout(getPhrase(category), "right");
 	} else {
 		values[0].classList.add("tie");
 		values[1].classList.add("tie");
-		openCallout(getPhrase(category, "tie"), "both");
 	}
 
 	setTimeout(resetCategory.bind(null, values), WAIT_TIME);
@@ -242,36 +193,47 @@ function checkClock() {
 	const current = parseInt(clock.textContent);
 	const next = current - TICK_SIZE;
 
-	// If game is over condition (4th quarter crossing <= 0)
-	if (i === 3 && next <= 0) {
-		const scores = document.querySelectorAll("output span");
-		const leftScore = parseInt(scores[1].textContent);
-		const rightScore = parseInt(scores[3].textContent);
-		if (rightScore > leftScore) {
-			globalThis.umami?.track("Buckets", { result: "Win" });
-			alert("You win!");
-		} else if (rightScore < leftScore) {
-			globalThis.umami?.track("Buckets", { result: "Lose" });
-			alert("You lose!");
-		} else {
-			globalThis.umami?.track("Buckets", { result: "Draw" });
-			alert("It's a draw!");
-		}
-		return; // stop here when game ends
-	}
-
-	// Quarter handling before the 4th
+	// 1) Update UI first
 	if (next > 0) {
 		clock.textContent = String(next);
 	} else {
-		// roll to next quarter and reset to 12
+		// next <= 0
+		if (i === 3) {
+			// Q4 end: clamp to 0 and finish
+			clock.textContent = "0";
+
+			const scores = document.querySelectorAll("output span");
+			const leftScore = parseInt(scores[1].textContent);
+			const rightScore = parseInt(scores[3].textContent);
+
+			if (rightScore > leftScore) {
+				globalThis.umami?.track("Buckets", { result: "Win" });
+				openCallout("HOME WINS!", "right");
+				openCallout("GUEST LOSES", "left");
+			} else if (rightScore < leftScore) {
+				globalThis.umami?.track("Buckets", { result: "Lose" });
+				openCallout("GUEST WINS!", "left");
+				openCallout("HOME LOSES", "right");
+			} else {
+				globalThis.umami?.track("Buckets", { result: "Draw" });
+				openCallout("DRAW!", "left");
+				openCallout("DRAW!", "right");
+			}
+
+			// prevent further interactions after game end
+			main.removeEventListener("click", compareValues, false);
+			return; // stop here when game ends
+		}
+
+		// Not Q4: advance to next quarter and reset the clock to 12
 		i = Math.min(i + 1, 3);
 		quarter.textContent = q[i];
 		clock.textContent = "12";
 	}
 
+	// 2) Continue the game
 	playCards();
-	document.addEventListener("click", compareValues, false);
+	main.addEventListener("click", compareValues, false);
 }
 
 function playerWinsCnt(playerCard, cpuCard) {

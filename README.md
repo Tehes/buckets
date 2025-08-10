@@ -12,7 +12,8 @@ total after four quarters wins the game.
    The CPU’s card is picked dynamically based on the current score to keep the game balanced.
 2. **Select a Stat** – Click one stat on your card (e.g. **PTS**, **REB**, **AST**).
 3. **Compare & Score** – Your value is compared with the opponent’s. Points are awarded as shown in the scoring table below.
-4. **Quarters & Timer** – Each comparison ticks 1 minute off the game clock. A quarter ends at **0 : 00**; after four quarters the game is over.
+4. **Quarters & Timer** – Each comparison ticks the amount set in the Settings (default = 1 minute) off the game clock. After four quarters the game
+   is over.
 5. **Result** – A win/lose message shows the final score.
 
 ---
@@ -55,6 +56,7 @@ Play instantly at **[https://tehes.github.io/buckets/](https://tehes.github.io/b
 - **Dynamic handicap:** Depending on the score, the game allows the CPU card to beat yours in 0 – N categories (N shrinks when you lead, grows when
   you trail).\
   The algorithm increases or decreases this limit in ±1 steps until it finds a matching card, so games stay close without feeling scripted.
+- **Configurable clock decrement:** Players can choose in the Settings whether each matchup shortens the game clock by 1, 2, or 4 minutes.
 - `setCard(side, data)` renders the player card on the board.
 - `compareValues()` compares stats and applies the **1 / 2 / 3‑point scoring**, then updates the scoreboard and animations.
 - The loop runs until the clock hits 0 : 00 in the 4th quarter, then shows the final result.
@@ -66,7 +68,8 @@ Play instantly at **[https://tehes.github.io/buckets/](https://tehes.github.io/b
 
 ### Data Scraper (`fetchData.js`)
 
-- Puppeteer script to refresh **data.json** from stats.nba.com.
+- Puppeteer script to refresh **data.json** from stats.nba.com. Filters for rotation‑level players (≥ 18 MIN, 60–82 GP), limits to the top 130 by EFF,
+  and adds player image URLs.
 
 ---
 
