@@ -53,7 +53,7 @@
 html {
     background-color: var(--bg-right);
     -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
-    height: 100vh;
+    height: 100dvh;
 }
 
 body {
@@ -63,14 +63,12 @@ body {
 }
 
 @supports (height: 100dvh) {
-
     body {
         height: 100dvh;
     }
 }
 
 @supports not (height: 100dvh) {
-
     body {
         height: -webkit-fill-available;
     }
