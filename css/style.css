@@ -96,6 +96,17 @@ p {
     padding: 0;
 }
 
+a:link,
+a:active,
+a:visited {
+    color: var(--text-brighter);
+    text-decoration: underline;
+}
+
+a:hover {
+    color: var(--text-bright);
+}
+
 /*
 -------------------------------------------------------------------
 MAIN
@@ -287,17 +298,6 @@ footer output span {
 #time img:active {
     transform: scale(0.9);
     filter: invert(1);
-}
-
-a:link,
-a:active,
-a:visited {
-    text-decoration: none;
-    color: var(--font-color);
-}
-
-a:hover {
-    text-decoration: underline;
 }
 
 .animate {

@@ -96,14 +96,14 @@
     </main>
     <footer>
         <div class="scoreboard">
-            <div class="players active">GUEST</div>
+            <div class="players active">CPU</div>
             <output class="">
                 <span>0</span><span>0</span>
             </output>
             <output class="">
                 <span>0</span><span>0</span>
             </output>
-            <div class="players">HOME</div>
+            <div class="players">YOU</div>
         </div>
         <div id="time">
             <img id="helpBtn" src="icons/help-svgrepo-com.svg" alt="">
@@ -122,31 +122,28 @@
                 </button>
             </div>
             <div class="modal__body">
-                <p>You play as HOME. Your card is on the right (desktop) or at the
-                    bottom (mobile). The opponent (GUEST) is on the other side.
-                </p>
+                <p>You play as <strong>YOU</strong>. Your card is on the right (desktop) or at the bottom (mobile). The
+                    opponent is the <strong>CPU</strong> on the other side.</p>
 
                 <h3>How to play</h3>
                 <ol>
-                    <li>Choose one stat on your HOME card</li>
-                    <li>The opponent’s stat in the same category is revealed.</li>
+                    <li>Choose one stat on your <strong>YOU</strong> card.</li>
+                    <li>The <strong>CPU</strong>’s stat in the same category is revealed.</li>
                     <li>The higher value wins the round.</li>
                     <li>After each round, the game clock decreases by the amount set in the Settings (default: 1
                         minute).</li>
                     <li>When the game ends, the player with the most points wins.</li>
                 </ol>
 
-                <p>New round, new cards: At the start of every round, both you and your opponent get a new
-                    player card.<br>
-                    – Your HOME card is random.<br>
-                    – The GUEST card is chosen based on the current score difference: if you’re ahead, you’ll face
-                    tougher
+                <p>New round, new cards: At the start of every round, both you and the CPU get a new player card.<br>
+                    – Your card is random.<br>
+                    – The CPU card is chosen based on the current score difference: if you’re ahead, you’ll face tougher
                     opponents; if you’re behind, you’ll get easier ones.</p>
 
                 <h3>Color legend</h3>
                 <ul>
-                    <li><span class="higher">Green</span> on HOME → you score</li>
-                    <li><span class="higher">Green</span> on GUEST → opponent scores</li>
+                    <li><span class="higher">Green</span> on <strong>YOU</strong> → you score</li>
+                    <li><span class="higher">Green</span> on <strong>CPU</strong> → opponent scores</li>
                     <li><span class="tie">Yellow</span> → tie (no points)</li>
                     <li><span class="lower">Red</span> → loses the round</li>
                 </ul>
@@ -157,8 +154,10 @@
                     <li>3 points: 3PM, 3P%</li>
                     <li>2 points: all others (PTS, REB, AST, STL, BLK, FG%, EFF, …)</li>
                 </ul>
-                <p>Data: Player stats come from the most recently finished NBA regular season, sourced from
-                    nba.com/stats</p>
+                <h3>Data</h3>
+                <p>Player stats come from the most recently finished NBA regular season, sourced from
+                    <a href="https://www.nba.com/stats" target="_blank">nba.com/stats</a>
+                </p>
             </div>
         </aside>
 
