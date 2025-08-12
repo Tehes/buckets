@@ -14,11 +14,11 @@ const categories = [
 	"3pm",
 	"3pp",
 	"ftp",
+	"ftm",
 	"reb",
 	"ast",
 	"stl",
 	"blk",
-	"eff",
 ];
 
 const WAIT_TIME = 3000; // time in ms to wait before next action
@@ -42,16 +42,16 @@ Phrases for callouts
 const PHRASES = {
 	pts: ["Buckets!", "Can’t be stopped!", "Scoring clinic!"],
 	fgp: ["Ultra efficient!", "Clinical finishing!", "Knocks down shots!"],
-	"3pm": ["From downtown!", "Splash!", "Bang!"],
+	"3pm": ["From downtown!", "Splash!", "From the logo!"],
 	"3pp": ["On fire from deep!", "Can’t miss from three!", "Stays hot from range!"],
 	ftp: ["Money at the line!", "Automatic at the stripe!", "Pure at the line!"],
+	ftm: ["Knocks it down!", "Makes them count!", "Cash from the line!"],
 	gp: ["Ironman!", "Shows up nightly!", "Durability edge!"],
 	min: ["Workhorse minutes!", "Big minutes tonight!", "Coach trusts him."],
 	reb: ["Owns the glass!", "Clears the boards!", "Owns the paint!"],
 	ast: ["Dime time!", "Finds the open man!", "Table setter!"],
 	stl: ["Picks his pocket!", "Takes it away!", "Turns defense to offense!"],
 	blk: ["Stuffed at the rim!", "Sends it back!", "Denied at the summit!"],
-	eff: ["All-around impact!", "Stuffing the stat sheet!", "Doing it all!"],
 };
 
 function showToast(el, message) {
@@ -151,7 +151,7 @@ function compareValues(ev) {
 	const rightScore = scores[3];
 
 	let points = 2;
-	if (category === "ftp" || category === "gp" || category === "min") {
+	if (category === "ftp" || category === "ftm" || category === "gp" || category === "min") {
 		points = 1;
 	} else if (category === "3pm" || category === "3pp") {
 		points = 3;
@@ -208,12 +208,12 @@ function checkClock() {
 
 			if (rightScore > leftScore) {
 				globalThis.umami?.track("Buckets", { result: "Win" });
-				openCallout("HOME WINS!", "right");
-				openCallout("GUEST LOSES", "left");
+				openCallout("YOU WIN!", "right");
+				openCallout("CPU LOSES", "left");
 			} else if (rightScore < leftScore) {
 				globalThis.umami?.track("Buckets", { result: "Lose" });
-				openCallout("GUEST WINS!", "left");
-				openCallout("HOME LOSES", "right");
+				openCallout("CPU WINS!", "left");
+				openCallout("YOU LOSE", "right");
 			} else {
 				globalThis.umami?.track("Buckets", { result: "Draw" });
 				openCallout("DRAW!", "left");

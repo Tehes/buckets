@@ -20,11 +20,11 @@ total after four quarters wins the game.
 
 ## 🏀 Scoring Table
 
-| Stat                      | Points |
-| ------------------------- | ------ |
-| **FT %**, **GP**, **MIN** | 1      |
-| **3PM**, **3PP**          | 3      |
-| _All others_              | 2      |
+| Stat                              | Points |
+| --------------------------------- | ------ |
+| **FT%**, **FTM**, **GP**, **MIN** | 1      |
+| **3PM**, **3PP**                  | 3      |
+| _All others_                      | 2      |
 
 > _Tip:_ A made three can swing the momentum, but missing costs you 3 points – pick wisely!
 
