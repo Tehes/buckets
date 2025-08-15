@@ -1,7 +1,7 @@
 /* --------------------------------------------------------------------------------------------------
 Imports
 ---------------------------------------------------------------------------------------------------*/
-import stats from "../data.json" with { type: "json" };
+import stats from "../data-nba.json" with { type: "json" };
 
 /* --------------------------------------------------------------------------------------------------
 Variables
@@ -21,6 +21,7 @@ const categories = [
 	"blk",
 ];
 
+const league = "nba";
 const WAIT_TIME = 3000; // time in ms to wait before next action
 let TICK_SIZE = 1; // minutes to decrement per matchup (1 = default)
 
@@ -107,14 +108,14 @@ function setCard(side, data) {
 	card.background = card.querySelector(".img-bg");
 
 	// set Theme Color
-	setTheme(side, data.team);
+	setTheme(side, `${league}-${data.team}`);
 
 	// set team logo
 	card.background.style.setProperty(
 		`--bg-img`,
-		`url(../img/${data.team}.svg)`,
+		`url(../img/${league}/${data.team}.svg)`,
 	);
-	card.background.style.setProperty(`--bg-color`, `var(--${data.team})`);
+	card.background.style.setProperty(`--bg-color`, `var(--${league}-${data.team})`);
 	// set player name
 	card.playerName.textContent = data.player;
 	//set player picture

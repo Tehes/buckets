@@ -12,7 +12,7 @@
 
 import puppeteer from "https://deno.land/x/puppeteer@16.2.0/mod.ts";
 
-const TARGET_URL = "https://www.nba.com/stats/leaders?SeasonType=Regular+Season&StatCategory=EFF";
+const TARGET_URL = "https://stats.wnba.com/leaders/?Season=2024&SeasonType=Regular%20Season&StatCategory=EFF";
 
 const DEFAULT_CHROME = "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"; // macOS path
 const executablePath = Deno.env.get("PUPPETEER_EXECUTABLE_PATH") ??
@@ -21,10 +21,10 @@ const executablePath = Deno.env.get("PUPPETEER_EXECUTABLE_PATH") ??
 	: undefined;
 
 const TIMEOUT_MS = 30_000;
-const MAX_ROWS = 130;
-const MIN_MINUTES = 18;
-const MIN_GAMES = 60;
-const MAX_GAMES = 82;
+const MAX_ROWS = 56;
+const MIN_MINUTES = 0;
+const MIN_GAMES = 0;
+const MAX_GAMES = 44;
 
 const browser = await puppeteer.launch({
 	headless: true,
@@ -63,7 +63,7 @@ try {
 		if (!select) throw new Error("6th <select> (page-size) not found");
 
 		// The option value "-1" corresponds to "All"
-		select.value = "-1";
+		select.value = "string:All";
 		["change", "input", "blur"].forEach((type) => select.dispatchEvent(new Event(type, { bubbles: true })));
 	});
 
@@ -91,6 +91,7 @@ try {
 		// Headers
 		const headCells = table.querySelectorAll("thead th");
 		const headers = [...headCells].map((th, idx) =>
+			th.getAttribute("data-field") ||
 			th.getAttribute("field") ||
 			th.textContent.trim().replace(/\s+/g, "_") ||
 			`col_${idx}`
@@ -160,7 +161,7 @@ try {
 	// -----------------------------------------------------------
 	const map = {
 		RANK: "#",
-		PLAYER_NAME: "player",
+		PLAYER: "player",
 		TEAM: "team",
 		GP: "gp",
 		MIN: "min",
@@ -194,13 +195,13 @@ try {
 				obj[key] = `${v}`;
 			}
 		}
-		obj.pic = `https://cdn.nba.com/headshots/nba/latest/1040x760/${obj.id}.png`;
+		obj.pic = `https://ak-static.cms.nba.com/wp-content/uploads/headshots/wnba/latest/1040x760/${obj.id}.png`;
 
 		return obj;
 	});
 
-	await Deno.writeTextFile("data.json", JSON.stringify(data, null, 2));
-	console.log(`✅ Saved ${data.length} normalized player records to data.json`);
+	await Deno.writeTextFile("data-wnba.json", JSON.stringify(data, null, 2));
+	console.log(`✅ Saved ${data.length} normalized player records to dataWNBA.json`);
 } catch (err) {
 	console.error("❌  Scraping failed:", err.message);
 	throw err;
