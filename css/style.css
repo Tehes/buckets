@@ -43,7 +43,7 @@
     --nba-TOR: #ce1141;
     --nba-UTA: #f9a01b;
     --nba-WAS: #002b5c;
-    
+
     /* WNBA */
     --wnba-ATL: #E4173D;
     --wnba-CHI: #4D90CD;
@@ -153,7 +153,7 @@ section {
 }
 
 .img-bg {
-    --bg-img: url(../img/DEN.svg);
+    --bg-img: url(../img/nba/DEN.svg);
     height: 40%;
     background: var(--bg-img) top left, linear-gradient(90deg, hsla(0, 0%, 0%, 0.1), hsla(0, 0%, 0%, 0.2));
     border-radius: var(--rounded-corners) var(--rounded-corners) 0 0;
