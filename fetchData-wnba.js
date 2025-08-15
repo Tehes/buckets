@@ -5,14 +5,14 @@
 // Adds player image URLs.
 //
 // Usage:
-//   deno run -A fetchdata.js
+//   deno run -A fetchdata-wnba.js
 //
 // This writes players stats into data.json.
 // ---------------------------------------------------------------------------
 
 import puppeteer from "https://deno.land/x/puppeteer@16.2.0/mod.ts";
 
-const TARGET_URL = "https://stats.wnba.com/leaders/?Season=2024&SeasonType=Regular%20Season&StatCategory=EFF";
+const TARGET_URL = "https://stats.wnba.com/players/traditional/?sort=PTS&dir=-1&Season=2024&SeasonType=Regular%20Season";
 
 const DEFAULT_CHROME = "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"; // macOS path
 const executablePath = Deno.env.get("PUPPETEER_EXECUTABLE_PATH") ??
@@ -21,9 +21,9 @@ const executablePath = Deno.env.get("PUPPETEER_EXECUTABLE_PATH") ??
 	: undefined;
 
 const TIMEOUT_MS = 30_000;
-const MAX_ROWS = 56;
-const MIN_MINUTES = 0;
-const MIN_GAMES = 0;
+const MAX_ROWS = 96;
+const MIN_MINUTES = 12;
+const MIN_GAMES = 25;
 const MAX_GAMES = 44;
 
 const browser = await puppeteer.launch({
@@ -40,8 +40,26 @@ const browser = await puppeteer.launch({
 try {
 	const page = await browser.newPage();
 
+	// Pretend to be a real browser to avoid CDN/consent blocking
+	await page.setUserAgent(
+		"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36",
+	);
+	await page.setExtraHTTPHeaders({
+		"Accept-Language": "en-US,en;q=0.9",
+		"Referer": "https://www.wnba.com/",
+	});
+
 	console.log("⏳  Opening NBA stats page …");
 	await page.goto(TARGET_URL, { waitUntil: "networkidle2", timeout: TIMEOUT_MS });
+
+	// Handle OneTrust cookie banner if present
+	try {
+		await page.waitForSelector("#onetrust-accept-btn-handler", { timeout: 5000 });
+		await page.click("#onetrust-accept-btn-handler");
+		console.log("✅ Accepted cookie banner");
+	} catch (_) {
+		// banner not present
+	}
 
 	// Wait until the main table element is present
 	await page.waitForSelector("table", { timeout: TIMEOUT_MS });
@@ -49,7 +67,7 @@ try {
 
 	// Wait until at least six <select> elements are present in the DOM
 	await page.waitForFunction(
-		() => document.querySelectorAll("select").length >= 6,
+		() => document.querySelectorAll("select").length >= 23,
 		{ timeout: TIMEOUT_MS },
 	);
 
@@ -57,10 +75,10 @@ try {
 	console.log("🔽 Setting page size to 'All'...");
 
 	await page.evaluate(() => {
-		// Assumption: there are always exactly 6 <select> elements; the 6th (index 5) controls page size
+		// Assumption: there are always exactly 23 <select> elements; the 22nd (index 21) controls page size
 		const selects = document.querySelectorAll("select");
-		const select = selects[5];
-		if (!select) throw new Error("6th <select> (page-size) not found");
+		const select = selects[21];
+		if (!select) throw new Error("22th <select> (page-size) not found");
 
 		// The option value "-1" corresponds to "All"
 		select.value = "string:All";
@@ -161,8 +179,8 @@ try {
 	// -----------------------------------------------------------
 	const map = {
 		RANK: "#",
-		PLAYER: "player",
-		TEAM: "team",
+		PLAYER_NAME: "player",
+		TEAM_ABBREVIATION: "team",
 		GP: "gp",
 		MIN: "min",
 		PTS: "pts",

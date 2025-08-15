@@ -5,7 +5,7 @@
 // Adds player image URLs.
 //
 // Usage:
-//   deno run -A fetchdata.js
+//   deno run -A fetchdata-nba.js
 //
 // This writes players stats into data.json.
 // ---------------------------------------------------------------------------
