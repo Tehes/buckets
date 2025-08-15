@@ -111,8 +111,7 @@ function setCard(side, data) {
 	setTheme(side, `${league}-${data.team}`);
 
 	// set team logo
-	const logoUrl = new URL(`img/${league}/${data.team}.svg`, document.baseURI).href;
-	card.background.style.setProperty("--bg-img", `url(${logoUrl})`);
+	card.background.style.setProperty(`--bg-img`, `url(../img/${league}/${data.team}.svg)`);
 	card.background.style.setProperty(`--bg-color`, `var(--${league}-${data.team})`);
 	// set player name
 	card.playerName.textContent = data.player;
