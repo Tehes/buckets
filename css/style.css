@@ -173,6 +173,19 @@ section {
     object-fit: contain;
 }
 
+.label {
+    position: absolute;
+    top: 0.5rem;
+    right: 0.5rem;
+    background: rgba(0, 0, 0, 0.3);
+    color: var(--text-brighter);
+    padding: 0.2rem 0.5rem;
+    border-radius: var(--rounded-corners);
+    font-size: 0.8rem;
+    font-weight: 600;
+    z-index: 2;
+}
+
 main h1 {
     margin: 0.7vmin 4vmin 0 4vmin;
     font-size: 4vmin;
