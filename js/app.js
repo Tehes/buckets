@@ -30,6 +30,7 @@ const categories = [
 	"blk",
 ];
 
+let firstDeal = false;
 const WAIT_TIME = 3000; // time in ms to wait before next action
 let TICK_SIZE = 1; // minutes to decrement per matchup (1 = default)
 
@@ -139,6 +140,7 @@ function setCard(side, data) {
 
 function compareValues(ev) {
 	let category;
+	firstDeal = false;
 
 	if (Object.keys(ev.target.dataset).length > 0) {
 		document.removeEventListener("click", compareValues, false);
@@ -414,12 +416,15 @@ function init() {
 		if (t && t.name === "league") {
 			league = t.value;
 			deck = decks[league];
-			// immediately draw cards from the new league – without resetting clock/score
-			playCards();
+			if (firstDeal) {
+				// before the first comparison, allow redraw so initial hand reflects chosen league
+				playCards();
+			}
 		}
 	});
 
 	playCards();
+	firstDeal = true;
 }
 
 /* --------------------------------------------------------------------------------------------------
