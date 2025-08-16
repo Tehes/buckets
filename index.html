@@ -123,7 +123,8 @@
             </div>
             <div class="modal__body">
                 <p>You play as <strong>YOU</strong>. Your card is on the right (desktop) or at the bottom (mobile). The
-                    opponent is the <strong>CPU</strong> on the other side.</p>
+                    opponent is the <strong>CPU</strong> on the other side. You can switch between NBA and WNBA rosters
+                    in the Settings at any time.</p>
 
                 <h3>How to play</h3>
                 <ol>
@@ -155,8 +156,10 @@
                     <li>2 points: all others (PTS, REB, AST, STL, BLK, FG%, EFF, …)</li>
                 </ul>
                 <h3>Data</h3>
-                <p>Player stats come from the most recently finished NBA regular season, sourced from
-                    <a href="https://www.nba.com/stats" target="_blank">nba.com/stats</a>
+                <p>Player stats come from the most recently finished NBA or WNBA regular season (based on your
+                    Settings), sourced from
+                    <a href="https://www.nba.com/stats" target="_blank">nba.com/stats</a> and
+                    <a href="https://www.wnba.com/stats" target="_blank">wnba.com/stats</a>.
                 </p>
             </div>
         </aside>
@@ -171,6 +174,21 @@
             </div>
             <div class="modal__body">
                 <form id="settingsForm">
+                    <fieldset>
+                        <legend id="leagueLegend">League</legend>
+                        <div role="radiogroup" aria-labelledby="leagueLegend">
+                            <label for="leagueNBA">
+                                <input type="radio" name="league" id="leagueNBA" value="nba" checked>
+                                NBA
+                            </label>
+                            <label for="leagueWNBA" style="margin-left:1rem">
+                                <input type="radio" name="league" id="leagueWNBA" value="wnba">
+                                WNBA
+                            </label>
+                        </div>
+                        <p class="note">Switching leagues changes the player pool immediately.</p>
+                    </fieldset>
+
                     <fieldset>
                         <legend id="tickLegend">Clock decrement per matchup</legend>
                         <!-- Radio group: how many minutes the game clock decreases after each comparison -->

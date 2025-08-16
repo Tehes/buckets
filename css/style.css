@@ -346,7 +346,7 @@ MODAL
 
 .modal:not(.hidden) {
     overflow: auto;
-    min-height: 195px;
+    min-height: 310px;
 }
 
 .modal {

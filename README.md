@@ -1,14 +1,15 @@
 # BUCKETS – Basketball Stat Battle
 
-**BUCKETS** is a simple, browser‑based card game inspired by classic Quartett and Top Trumps. In each round, you draw two random NBA player cards and
-pick the stat that gives your team (the **Home** team) the edge. Points are awarded as outlined in the **Scoring Table** below. Whoever has the higher
-total after four quarters wins the game.
+**BUCKETS** is a simple, browser‑based card game inspired by classic Quartett and Top Trumps. In each round, you draw two random NBA or WNBA player
+cards and pick the stat that gives your team (the **Home** team) the edge. Points are awarded as outlined in the **Scoring Table** below. Whoever has
+the higher total after four quarters wins the game.
 
 ---
 
 ## 🎮 How to Play
 
 1. **Deck Setup** – Each round you draw a **random** player card for the Home team.\
+   You can switch between NBA and WNBA in the Settings; switching changes the player pool immediately but keeps your score and clock.\
    The CPU’s card is picked dynamically based on the current score to keep the game balanced.
 2. **Select a Stat** – Click one stat on your card (e.g. **PTS**, **REB**, **AST**).
 3. **Compare & Score** – Your value is compared with the opponent’s. Points are awarded as shown in the scoring table below.
@@ -34,6 +35,8 @@ total after four quarters wins the game.
 
 Play instantly at **[https://tehes.github.io/buckets/](https://tehes.github.io/buckets/)** – no installation required.
 
+Supports both NBA and WNBA rosters.
+
 ---
 
 ## 🛠️ For Developers
@@ -44,8 +47,10 @@ Play instantly at **[https://tehes.github.io/buckets/](https://tehes.github.io/b
 │   └── app.js        # Game logic
 ├── css/
 │   └── style.css     # Styling
-├── fetchData.js      # Deno script – scrapes stats.nba.com
-├── data.json         # Scraped player statistics
+├── fetchData-nba.js   # Deno script – scrapes NBA stats
+├── fetchData-wnba.js  # Deno script – scrapes WNBA stats
+├── data-nba.json      # Scraped NBA player statistics
+├── data-wnba.json     # Scraped WNBA player statistics
 └── deno.json         # Deno task configuration
 ```
 
@@ -61,15 +66,20 @@ Play instantly at **[https://tehes.github.io/buckets/](https://tehes.github.io/b
 - `compareValues()` compares stats and applies the **1 / 2 / 3‑point scoring**, then updates the scoreboard and animations.
 - The loop runs until the clock hits 0 : 00 in the 4th quarter, then shows the final result.
 
+- The active league (NBA/ WNBA) is selected via Settings. Switching leagues changes the player pool immediately but keeps the current score and clock.
+
 ### Styling (`style.css`)
 
 - CSS variables for team colours and layout.
 - Fully responsive with `vmin` units.
 
-### Data Scraper (`fetchData.js`)
+- CSS variables are namespaced by league (e.g. `--nba-den`, `--wnba-nyl`).
 
-- Puppeteer script to refresh **data.json** from stats.nba.com. Filters for rotation‑level players (≥ 18 MIN, 60–82 GP), limits to the top 130 by EFF,
-  and adds player image URLs.
+### Data Scraper (`fetchData-nba.js`, `fetchData-wnba.js`)
+
+- Puppeteer scripts to refresh **data-nba.json** and **data-wnba.json** from stats.nba.com and wnba.com.
+- Filters for rotation-level players in each league, applies league-specific thresholds, then ranks and trims by EFF.
+- Adds player image URLs.
 
 ---
 
@@ -80,3 +90,5 @@ Distributed under the [MIT License](LICENSE).
 ## 🙏 Credits
 
 Colour palettes courtesy of **[NBA Colors](https://nbacolors.com/)**.
+
+WNBA team colours and logos courtesy of the official WNBA website.

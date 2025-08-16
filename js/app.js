@@ -1,11 +1,20 @@
 /* --------------------------------------------------------------------------------------------------
 Imports
 ---------------------------------------------------------------------------------------------------*/
-import stats from "../data-nba.json" with { type: "json" };
+import nbaStats from "../data-nba.json" with { type: "json" };
+import wnbaStats from "../data-wnba.json" with { type: "json" };
 
 /* --------------------------------------------------------------------------------------------------
 Variables
 ---------------------------------------------------------------------------------------------------*/
+const decks = {
+	nba: structuredClone(nbaStats),
+	wnba: structuredClone(wnbaStats),
+};
+
+let league = "nba";
+let deck = decks[league];
+
 const categories = [
 	"gp",
 	"min",
@@ -21,7 +30,6 @@ const categories = [
 	"blk",
 ];
 
-const league = "nba";
 const WAIT_TIME = 3000; // time in ms to wait before next action
 let TICK_SIZE = 1; // minutes to decrement per matchup (1 = default)
 
@@ -47,11 +55,11 @@ const PHRASES = {
 	"3pp": ["On fire from deep!", "Can’t miss from three!", "Stays hot from range!"],
 	ftp: ["Money at the line!", "Automatic at the stripe!", "Pure at the line!"],
 	ftm: ["Knocks it down!", "Makes them count!", "Cash from the line!"],
-	gp: ["Ironman!", "Shows up nightly!", "Durability edge!"],
-	min: ["Workhorse minutes!", "Big minutes tonight!", "Coach trusts him."],
+	gp: ["Never misses a game!", "Always available!", "Durability edge!"],
+	min: ["Workhorse minutes!", "Big minutes tonight!", "Heavy workload tonight!"],
 	reb: ["Owns the glass!", "Clears the boards!", "Owns the paint!"],
-	ast: ["Dime time!", "Finds the open man!", "Table setter!"],
-	stl: ["Picks his pocket!", "Takes it away!", "Turns defense to offense!"],
+	ast: ["Dime time!", "Finds the open teammate!", "Table setter!"],
+	stl: ["Picks the pocket!", "Takes it away!", "Turns defense to offense!"],
 	blk: ["Stuffed at the rim!", "Sends it back!", "Denied at the summit!"],
 };
 
@@ -95,7 +103,7 @@ function setTheme(side, teamVar) {
 	if (globalThis.matchMedia("(max-width: 480px)").matches) {
 		if (side === "right" && meta) meta.setAttribute("content", teamColor);
 	} else {
-		// Desktop: z. B. immer auf bg-left setzen
+		// Desktop: always set to bg-left
 		if (side === "left" && meta) meta.setAttribute("content", teamColor);
 	}
 }
@@ -254,6 +262,12 @@ function maxAllowedWins(lead) {
 }
 
 function playCards() {
+	// Ensure there are enough cards in the current league deck
+	if (deck.length < 2) {
+		decks[league] = structuredClone(league === "nba" ? nbaStats : wnbaStats);
+		deck = decks[league];
+	}
+
 	const spans = document.querySelectorAll("output span");
 	const cpuScore = parseInt(spans[1].textContent);
 	const playerScore = parseInt(spans[3].textContent);
@@ -269,65 +283,64 @@ function playCards() {
 	let currentMaxWins = allowedWins;
 	const step = lead >= 0 ? 1 : -1;
 
-	let foundExact = false; // true if we found a CPU card with exactly currentMaxWins
+	let foundExact = false; // true if we find a CPU card with exactly currentMaxWins
 	let limitBumps = 0;
-	const MAX_BUMPS = 20; // safety: stop after N limit adjustments
+	const MAX_BUMPS = 20; // Safety: stop after N adjustments
 
-	// track the closest candidate in case no exact match is found
+	// Fallback candidate if no exact match
 	let nearest = { diff: Infinity, cpuIdx: -1, cnt: null, playerIdxTmp: -1 };
 
 	while (!foundExact && limitBumps <= MAX_BUMPS) {
 		for (let tries = 0; tries < 20 && !foundExact; tries++) {
 			attempts++;
 
-			// draw a random player card for this attempt
-			playerIdx = Math.floor(Math.random() * stats.length);
-			playerCard = stats[playerIdx];
+			// random player card for this attempt
+			playerIdx = Math.floor(Math.random() * deck.length);
+			playerCard = deck[playerIdx];
 
-			// collect all exact matches for this player card
+			// possible exact matches for this player card
 			const matches = [];
 
 			// scan possible CPU opponents
-			for (let i = 0; i < stats.length; i++) {
+			for (let i = 0; i < deck.length; i++) {
 				if (i === playerIdx) continue;
-				const cnt = playerWinsCnt(playerCard, stats[i]);
+				const cnt = playerWinsCnt(playerCard, deck[i]);
 
-				// keep nearest candidate to the current target
+				// track the best "nearest" candidate
 				const diff = Math.abs(cnt - currentMaxWins);
 				if (
 					diff < nearest.diff ||
 					(diff === nearest.diff &&
-						// tie-breaker: when leading prefer tougher (higher cnt), when trailing prefer gentler (lower cnt)
 						((lead >= 0 && cnt > (nearest.cnt ?? -Infinity)) ||
 							(lead < 0 && cnt < (nearest.cnt ?? Infinity))))
 				) {
 					nearest = { diff, cpuIdx: i, cnt, playerIdxTmp: playerIdx };
 				}
 
-				// collect exact hits; decide after scanning all CPU cards to avoid always picking the earliest index
+				// collect exact matches
 				if (cnt === currentMaxWins) {
 					matches.push(i);
 				}
 			}
-			// if we found any exact matches for this player card, pick one at random
+
+			// pick an exact match at random
 			if (!foundExact && matches.length > 0) {
 				const pick = Math.floor(Math.random() * matches.length);
 				bestCpuIdx = matches[pick];
-				bestCnt = currentMaxWins; // equals cnt for exact matches
+				bestCnt = currentMaxWins;
 				foundExact = true;
-				// remember the player card that yielded the exact match
 				nearest.playerIdxTmp = playerIdx;
 			}
 		}
 
-		// adjust limit only if still not found (with clamp 0..categories.length)
+		// adjust limit if still not found
 		if (!foundExact) {
 			currentMaxWins = Math.max(0, Math.min(categories.length, currentMaxWins + step));
 			limitBumps++;
 		}
 	}
 
-	// fallback: use the nearest candidate if no exact match after MAX_BUMPS
+	// fallback to the nearest candidate
 	if (!foundExact && nearest.cpuIdx !== -1) {
 		bestCpuIdx = nearest.cpuIdx;
 		bestCnt = nearest.cnt;
@@ -336,18 +349,19 @@ function playCards() {
 
 	// final guard: ensure we always have a CPU card different from the player card
 	if (bestCpuIdx === -1) {
-		for (let i = 0; i < stats.length; i++) {
+		for (let i = 0; i < deck.length; i++) {
 			if (i !== playerIdx) {
 				bestCpuIdx = i;
-				bestCnt = playerWinsCnt(stats[playerIdx], stats[i]);
+				bestCnt = playerWinsCnt(deck[playerIdx], deck[i]);
 				break;
 			}
 		}
 	}
 
-	playerCard = stats.splice(playerIdx, 1)[0];
+	// remove the chosen cards from the current league deck
+	playerCard = deck.splice(playerIdx, 1)[0];
 	if (bestCpuIdx > playerIdx) bestCpuIdx--;
-	const cpuCard = stats.splice(bestCpuIdx, 1)[0];
+	const cpuCard = deck.splice(bestCpuIdx, 1)[0];
 
 	setCard("right", playerCard); // Home / Player
 	setCard("left", cpuCard); // Guest / CPU
@@ -396,6 +410,12 @@ function init() {
 			if (val === 1 || val === 2 || val === 4) {
 				TICK_SIZE = val;
 			}
+		}
+		if (t && t.name === "league") {
+			league = t.value;
+			deck = decks[league];
+			// immediately draw cards from the new league – without resetting clock/score
+			playCards();
 		}
 	});
 
