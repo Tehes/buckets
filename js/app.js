@@ -34,17 +34,21 @@ let firstDeal = false;
 const WAIT_TIME = 3000; // time in ms to wait before next action
 let TICK_SIZE = 1; // minutes to decrement per matchup (1 = default)
 
+function getQuarterLength() {
+	return league === "wnba" ? 10 : 12;
+}
+
 const main = document.querySelector("main");
 const howtoModal = document.getElementById("howtoModal");
 const settingsModal = document.getElementById("settingsModal");
 const settingsForm = document.getElementById("settingsForm");
-
 const helpBtn = document.getElementById("helpBtn");
 const settingsBtn = document.getElementById("settingsBtn");
 const howtoClose = document.getElementById("howtoClose");
 const settingsClose = document.getElementById("settingsClose");
 const calloutLeft = document.querySelector("section.left  .callout");
 const calloutRight = document.querySelector("section.right .callout");
+const clockEl = document.querySelector(".clock");
 
 /* --------------------------------------------------------------------------------------------------
 Phrases for callouts
@@ -143,7 +147,7 @@ function compareValues(ev) {
 	firstDeal = false;
 
 	if (Object.keys(ev.target.dataset).length > 0) {
-		document.removeEventListener("click", compareValues, false);
+		main.removeEventListener("click", compareValues, false);
 		category = Object.keys(ev.target.dataset)[0];
 	} else {
 		return;
@@ -194,21 +198,20 @@ function resetCategory(values) {
 }
 
 function checkClock() {
-	const clock = document.querySelector(".clock");
 	const quarter = document.querySelector(".quarter");
 	const q = ["1st", "2nd", "3rd", "4th"];
 	let i = parseInt(quarter.textContent[0]) - 1;
-	const current = parseInt(clock.textContent);
+	const current = parseInt(clockEl.textContent);
 	const next = current - TICK_SIZE;
 
 	// 1) Update UI first
 	if (next > 0) {
-		clock.textContent = String(next);
+		clockEl.textContent = String(next);
 	} else {
 		// next <= 0
 		if (i === 3) {
 			// Q4 end: clamp to 0 and finish
-			clock.textContent = "0";
+			clockEl.textContent = "0";
 
 			const scores = document.querySelectorAll("output span");
 			const leftScore = parseInt(scores[1].textContent);
@@ -236,7 +239,7 @@ function checkClock() {
 		// Not Q4: advance to next quarter and reset the clock to 12
 		i = Math.min(i + 1, 3);
 		quarter.textContent = q[i];
-		clock.textContent = "12";
+		clockEl.textContent = String(getQuarterLength());
 	}
 
 	// 2) Continue the game
@@ -417,12 +420,13 @@ function init() {
 			league = t.value;
 			deck = decks[league];
 			if (firstDeal) {
-				// before the first comparison, allow redraw so initial hand reflects chosen league
+				clockEl.textContent = String(getQuarterLength());
 				playCards();
 			}
 		}
 	});
 
+	clockEl.textContent = String(getQuarterLength());
 	playCards();
 	firstDeal = true;
 }
