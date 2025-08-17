@@ -217,19 +217,23 @@ function checkClock() {
 			const leftScore = parseInt(scores[1].textContent);
 			const rightScore = parseInt(scores[3].textContent);
 
+			let result;
 			if (rightScore > leftScore) {
-				globalThis.umami?.track("Buckets", { result: "Win" });
+				result = "Win";
 				openCallout("YOU WIN!", "right");
 				openCallout("CPU LOSES", "left");
 			} else if (rightScore < leftScore) {
-				globalThis.umami?.track("Buckets", { result: "Lose" });
+				result = "Lose";
 				openCallout("CPU WINS!", "left");
 				openCallout("YOU LOSE", "right");
 			} else {
-				globalThis.umami?.track("Buckets", { result: "Draw" });
+				result = "Draw";
 				openCallout("DRAW!", "left");
 				openCallout("DRAW!", "right");
 			}
+
+			const lead = rightScore - leftScore;
+			globalThis.umami?.track("Buckets", { result: result, lead: lead, league: league });
 
 			// prevent further interactions after game end
 			main.removeEventListener("click", compareValues, false);
