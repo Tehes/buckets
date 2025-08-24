@@ -165,10 +165,11 @@ section {
 
 .img-bg .team-logo {
     position: absolute;
-    top: 0;
-    left: 0;
-    width: 30%;
-    height: 30%;
+    top: 0.5rem;
+    left: 0.5rem;
+    width: 13vmin;
+    height: auto;
+    aspect-ratio: 1 / 1;
     object-fit: contain;
     object-position: center;
     pointer-events: none;
@@ -179,7 +180,6 @@ section {
     height: 100%;
     object-fit: contain;
     position: relative;
-    z-index: 1;
 }
 
 .label {
@@ -582,8 +582,7 @@ MEDIA QUERIES
     }
 
     .img-bg .team-logo {
-        width: 20%;
-        height: 20%;
+        width: 15vmin;
     }
 
     .img-bg .player-photo {
