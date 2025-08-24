@@ -135,22 +135,22 @@ function setTheme(side, teamVar) {
 }
 
 function setCard(side, data) {
-	const card = document.querySelector(`.${side}`);
-	card.team = card.querySelector("h2");
-	card.playerImg = card.querySelector("img");
-	card.playerName = card.querySelector("h1");
-	card.background = card.querySelector(".img-bg");
+        const card = document.querySelector(`.${side}`);
+        card.team = card.querySelector("h2");
+        card.logo = card.querySelector(".team-logo");
+        card.playerImg = card.querySelector(".player-photo");
+        card.playerName = card.querySelector("h1");
 
 	// set Theme Color
 	setTheme(side, `${league}-${data.team}`);
 
-	// set team logo
-	card.background.style.setProperty(`--bg-img`, `url(../img/${league}/${data.team}.svg)`);
-	card.background.style.setProperty(`--bg-color`, `var(--${league}-${data.team})`);
-	// set player name
-	card.playerName.textContent = data.player;
-	//set player picture
-	card.playerImg.src = data.pic;
+        // set team logo
+        card.logo.src = `img/${league}/${data.team}.svg`;
+        card.logo.alt = data.team;
+        // set player name
+        card.playerName.textContent = data.player;
+        //set player picture
+        card.playerImg.src = data.pic;
 
 	// set values
 	if (side === "right") {
