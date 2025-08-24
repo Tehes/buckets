@@ -153,24 +153,33 @@ section {
 }
 
 .img-bg {
-    --bg-img: url(../img/nba/DEN.svg);
     height: 40%;
-    background: var(--bg-img) top left, linear-gradient(90deg, hsla(0, 0%, 0%, 0.1), hsla(0, 0%, 0%, 0.2));
+    background: linear-gradient(90deg, hsla(0, 0%, 0%, 0.1), hsla(0, 0%, 0%, 0.2));
     border-radius: var(--rounded-corners) var(--rounded-corners) 0 0;
     display: flex;
     justify-content: center;
     align-items: center;
     padding-top: 1.1vh;
     position: relative;
-    background-size: 30%, auto;
-    background-repeat: no-repeat;
-    background-position: 1vmin 1vmin, left top;
 }
 
-.img-bg img {
+.img-bg .team-logo {
+    position: absolute;
+    top: 0.5rem;
+    left: 0.5rem;
+    width: 11vmin;
+    height: auto;
+    aspect-ratio: 1 / 1;
+    object-fit: contain;
+    object-position: center;
+    pointer-events: none;
+}
+
+.img-bg .player-photo {
     margin-left: 7vmin;
     height: 100%;
     object-fit: contain;
+    position: relative;
 }
 
 .label {
@@ -570,10 +579,13 @@ MEDIA QUERIES
 
     .img-bg {
         height: 35vw;
-        background-size: 20%, auto;
     }
 
-    .img-bg img {
+    .img-bg .team-logo {
+        width: 15vmin;
+    }
+
+    .img-bg .player-photo {
         max-width: 45vw;
         position: absolute;
         right: 7%;
