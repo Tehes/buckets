@@ -33,6 +33,27 @@ const categories = [
 let firstDeal = false;
 const WAIT_TIME = 3000; // time in ms to wait before next action
 let TICK_SIZE = 1; // minutes to decrement per matchup (1 = default)
+let showAllCpuOnCompare = false; // when true, reveal all CPU stats during compare
+/* --------------------------------------------------------------------------------------------------
+Settings: Save/Load helpers
+---------------------------------------------------------------------------------------------------*/
+function saveSettings() {
+	const settings = { league, TICK_SIZE, showAllCpuOnCompare };
+	localStorage.setItem("bucketsSettings", JSON.stringify(settings));
+}
+function loadSettings() {
+	const raw = localStorage.getItem("bucketsSettings");
+	if (!raw) return;
+	try {
+		const s = JSON.parse(raw);
+		if (s.league) league = s.league;
+		if (s.TICK_SIZE) TICK_SIZE = s.TICK_SIZE;
+		if (typeof s.showAllCpuOnCompare === "boolean") showAllCpuOnCompare = s.showAllCpuOnCompare;
+		deck = decks[league];
+	} catch (e) {
+		console.warn("Failed to load settings", e);
+	}
+}
 
 function getQuarterLength() {
 	return league === "wnba" ? 10 : 12;
@@ -154,7 +175,16 @@ function compareValues(ev) {
 	}
 
 	const values = document.querySelectorAll(`[data-${category}]`);
-	values[0].textContent = values[0].dataset[category];
+	if (showAllCpuOnCompare) {
+		// reveal all CPU (left) values at once
+		for (const c of categories) {
+			const el = document.querySelector(`section.left [data-${c}]`);
+			if (el) el.textContent = el.dataset[c];
+		}
+	} else {
+		// reveal only the chosen category (previous behavior)
+		values[0].textContent = values[0].dataset[category];
+	}
 	const leftValue = parseFloat(values[0].textContent);
 	const rightValue = parseFloat(values[1].textContent);
 
@@ -190,7 +220,15 @@ function compareValues(ev) {
 }
 
 function resetCategory(values) {
-	values[0].textContent = "---";
+	if (showAllCpuOnCompare) {
+		for (const c of categories) {
+			const el = document.querySelector(`section.left [data-${c}]`);
+			if (el) el.textContent = "---";
+		}
+	} else {
+		values[0].textContent = "---";
+	}
+
 	values[0].classList.remove("higher", "lower", "tie");
 	values[1].classList.remove("higher", "lower", "tie");
 
@@ -403,6 +441,7 @@ function close(modal) {
 }
 
 function init() {
+	loadSettings();
 	document.addEventListener("touchstart", function () {}, false);
 	main.addEventListener("click", compareValues, false);
 	document.addEventListener("animationend", updateScore, false);
@@ -428,7 +467,21 @@ function init() {
 				playCards();
 			}
 		}
+		if (t && t.name === "revealCpuAll") {
+			showAllCpuOnCompare = t.checked;
+		}
+		saveSettings();
 	});
+
+	// sync settings UI with current flags
+	const revealCb = document.getElementById("revealCpuAll");
+	if (revealCb) revealCb.checked = showAllCpuOnCompare;
+
+	const tickInput = settingsForm.querySelector(`input[name="tickSize"][value="${TICK_SIZE}"]`);
+	if (tickInput) tickInput.checked = true;
+
+	const leagueInput = settingsForm.querySelector(`input[name="league"][value="${league}"]`);
+	if (leagueInput) leagueInput.checked = true;
 
 	clockEl.textContent = String(getQuarterLength());
 	playCards();
