@@ -135,22 +135,22 @@ function setTheme(side, teamVar) {
 }
 
 function setCard(side, data) {
-        const card = document.querySelector(`.${side}`);
-        card.team = card.querySelector("h2");
-        card.logo = card.querySelector(".team-logo");
-        card.playerImg = card.querySelector(".player-photo");
-        card.playerName = card.querySelector("h1");
+	const card = document.querySelector(`.${side}`);
+	card.team = card.querySelector("h2");
+	card.logo = card.querySelector(".team-logo");
+	card.playerImg = card.querySelector(".player-photo");
+	card.playerName = card.querySelector("h1");
 
 	// set Theme Color
 	setTheme(side, `${league}-${data.team}`);
 
-        // set team logo
-        card.logo.src = `img/${league}/${data.team}.svg`;
-        card.logo.alt = data.team;
-        // set player name
-        card.playerName.textContent = data.player;
-        //set player picture
-        card.playerImg.src = data.pic;
+	// set team logo
+	card.logo.src = `img/${league}/${data.team}.svg`;
+	card.logo.alt = data.team;
+	// set player name
+	card.playerName.textContent = data.player;
+	//set player picture
+	card.playerImg.src = data.pic;
 
 	// set values
 	if (side === "right") {
@@ -204,19 +204,24 @@ function compareValues(ev) {
 		document.querySelectorAll("output")[0].classList.add("animate");
 		values[0].classList.add("higher");
 		values[1].classList.add("lower");
-		openCallout(getPhrase(category), "left");
+		if (!showAllCpuOnCompare) openCallout(getPhrase(category), "left");
 	} else if (rightValue > leftValue) {
 		rightScore.textContent = parseInt(rightScore.textContent) + points;
 		document.querySelectorAll("output")[1].classList.add("animate");
 		values[1].classList.add("higher");
 		values[0].classList.add("lower");
-		openCallout(getPhrase(category), "right");
+		if (!showAllCpuOnCompare) openCallout(getPhrase(category), "right");
 	} else {
 		values[0].classList.add("tie");
 		values[1].classList.add("tie");
 	}
 
-	setTimeout(resetCategory.bind(null, values), WAIT_TIME);
+	if (showAllCpuOnCompare) {
+		openCallout("Click to continue", "both");
+		main.addEventListener("click", () => resetCategory(values), { once: true });
+	} else {
+		setTimeout(resetCategory.bind(null, values), WAIT_TIME);
+	}
 }
 
 function resetCategory(values) {

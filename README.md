@@ -62,7 +62,7 @@ Supports both NBA and WNBA rosters.
   you trail).\
   The algorithm increases or decreases this limit in ±1 steps until it finds a matching card, so games stay close without feeling scripted.
 - **Configurable clock decrement:** Players can choose in the Settings whether each matchup shortens the game clock by 1, 2, or 4 minutes.
-- **Optional CPU reveal:** In the Settings, players can enable an option to reveal all CPU stats during comparisons (default = off).
+- **Optional CPU reveal:** In the Settings, players can enable an option to reveal all CPU stats during comparisons (default = off). When enabled, stats remain visible until you click to continue.
 - `setCard(side, data)` renders the player card on the board.
 - `compareValues()` compares stats and applies the **1 / 2 / 3‑point scoring**, then updates the scoreboard and animations.
 - The loop runs until the clock hits 0 : 00 in the 4th quarter, then shows the final result.
