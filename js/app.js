@@ -218,11 +218,7 @@ function compareValues(ev) {
 
 	if (showAllCpuOnCompare) {
 		openCallout("Click to continue", "both");
-		const proceed = () => {
-			main.removeEventListener("click", proceed);
-			resetCategory(values);
-		};
-		main.addEventListener("click", proceed);
+		main.addEventListener("click", () => resetCategory(values), { once: true });
 	} else {
 		setTimeout(resetCategory.bind(null, values), WAIT_TIME);
 	}
