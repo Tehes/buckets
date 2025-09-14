@@ -12,7 +12,7 @@
 
 import puppeteer from "https://deno.land/x/puppeteer@16.2.0/mod.ts";
 
-const TARGET_URL = "https://stats.wnba.com/players/traditional/?sort=PTS&dir=-1&Season=2024&SeasonType=Regular%20Season";
+const TARGET_URL = "https://stats.wnba.com/players/traditional/?sort=PTS&dir=-1&Season=2025&SeasonType=Regular%20Season";
 
 const DEFAULT_CHROME = "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"; // macOS path
 const executablePath = Deno.env.get("PUPPETEER_EXECUTABLE_PATH") ??
