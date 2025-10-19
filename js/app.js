@@ -472,7 +472,7 @@ function renderScoreChart() {
 	scoreChartInstance = new Chart(ctx, {
 		type: "line",
 		data: {
-			labels: scoreTimeline.home.map((_, i) => `${i}`),
+			labels: scoreTimeline.home.map((_, i) => i * TICK_SIZE),
 			datasets: [
 				{
 					label: "CPU",
