@@ -294,10 +294,12 @@ function checkClock() {
 			globalThis.umami?.track("Buckets", { result: result, lead: lead, league: league });
 
 			// Render chart and open modal at game end
-			setTimeout(() => {
-				open(chartModal);
-				renderScoreChart();
-			}, WAIT_TIME);
+			if (typeof Chart === "function") {
+				setTimeout(() => {
+					open(chartModal);
+					renderScoreChart();
+				}, WAIT_TIME);
+			}
 
 			// prevent further interactions after game end
 			main.removeEventListener("click", compareValues, false);
@@ -561,6 +563,10 @@ function testChart() {
 	scoreTimeline.cpu = c;
 
 	// Modal öffnen und Diagramm rendern
+	if (typeof Chart !== "function") {
+		console.warn("Chart.js is not available.");
+		return;
+	}
 	open(chartModal);
 	renderScoreChart();
 }
