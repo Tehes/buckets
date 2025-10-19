@@ -3,6 +3,7 @@ Imports
 ---------------------------------------------------------------------------------------------------*/
 import nbaStats from "../data-nba.json" with { type: "json" };
 import wnbaStats from "../data-wnba.json" with { type: "json" };
+import Chart from "https://esm.sh/chart.js/auto";
 
 /* --------------------------------------------------------------------------------------------------
 Variables
@@ -34,6 +35,12 @@ let firstDeal = false;
 const WAIT_TIME = 3000; // time in ms to wait before next action
 let TICK_SIZE = 1; // minutes to decrement per matchup (1 = default)
 let showAllCpuOnCompare = false; // when true, reveal all CPU stats during compare
+const scoreTimeline = {
+	home: [0],
+	cpu: [0],
+};
+let scoreChartInstance = null;
+
 /* --------------------------------------------------------------------------------------------------
 Settings: Save/Load helpers
 ---------------------------------------------------------------------------------------------------*/
@@ -63,6 +70,8 @@ const main = document.querySelector("main");
 const howtoModal = document.getElementById("howtoModal");
 const settingsModal = document.getElementById("settingsModal");
 const settingsForm = document.getElementById("settingsForm");
+const chartModal = document.getElementById("chartModal");
+const chartClose = document.getElementById("chartClose");
 const helpBtn = document.getElementById("helpBtn");
 const settingsBtn = document.getElementById("settingsBtn");
 const howtoClose = document.getElementById("howtoClose");
@@ -216,6 +225,12 @@ function compareValues(ev) {
 		values[1].classList.add("tie");
 	}
 
+	// Record running totals for line chart
+	const cpuTotal = parseInt(leftScore.textContent);
+	const homeTotal = parseInt(rightScore.textContent);
+	scoreTimeline.home.push(homeTotal);
+	scoreTimeline.cpu.push(cpuTotal);
+
 	if (showAllCpuOnCompare) {
 		openCallout("Click to continue", "both");
 		main.addEventListener("click", () => resetCategory(values), { once: true });
@@ -277,6 +292,12 @@ function checkClock() {
 
 			const lead = rightScore - leftScore;
 			globalThis.umami?.track("Buckets", { result: result, lead: lead, league: league });
+
+			// Render chart and open modal at game end
+			setTimeout(() => {
+				open(chartModal);
+				renderScoreChart();
+			}, WAIT_TIME);
 
 			// prevent further interactions after game end
 			main.removeEventListener("click", compareValues, false);
@@ -438,11 +459,110 @@ function updateScore(ev) {
 
 function open(modal) {
 	modal.classList.remove("hidden");
-	modal.setAttribute("aria-hidden", "false");
 }
 function close(modal) {
 	modal.classList.add("hidden");
-	modal.setAttribute("aria-hidden", "true");
+}
+
+function renderScoreChart() {
+	const ctx = document.getElementById("scoreChart");
+	if (scoreChartInstance) scoreChartInstance.destroy();
+	scoreChartInstance = new Chart(ctx, {
+		type: "line",
+		data: {
+			labels: scoreTimeline.home.map((_, i) => `${i}`),
+			datasets: [
+				{
+					label: "CPU",
+					data: scoreTimeline.cpu,
+					borderColor: "rgba(255, 0, 55, 1)",
+					borderWidth: 2,
+					pointRadius: 0,
+					tension: 0.3,
+				},
+				{
+					label: "YOU",
+					data: scoreTimeline.home,
+					borderColor: "rgba(0, 153, 255, 1)",
+					borderWidth: 2,
+					pointRadius: 0,
+					tension: 0.3,
+				},
+			],
+		},
+		options: {
+			responsive: true,
+			maintainAspectRatio: false,
+			scales: {
+				y: {
+					grid: { color: "rgba(204, 204, 204, 0.2)" },
+					ticks: { color: "rgba(204, 204, 204, 1)" },
+					beginAtZero: true,
+					title: {
+						display: true,
+						text: "Points",
+						color: "rgba(204, 204, 204, 1)",
+					},
+				},
+				x: {
+					grid: { color: "rgba(204, 204, 204, 0.2)" },
+					ticks: { color: "rgba(204, 204, 204, 1)" },
+					title: {
+						display: true,
+						text: "Time",
+						color: "rgba(204, 204, 204, 1)",
+					},
+				},
+			},
+			plugins: {
+				legend: {
+					labels: {
+						color: "rgba(204, 204, 204, 1)",
+					},
+					position: "bottom",
+				},
+			},
+		},
+	});
+}
+
+/**
+ * Quickly fill test data and show the chart.
+ * Example: app.testChart()
+ */
+function testChart() {
+	// Generate test data for full game length and current TICK_SIZE
+	const totalMinutes = getQuarterLength() * 4; // 48 (NBA) or 40 (WNBA)
+	const steps = Math.floor(totalMinutes / TICK_SIZE);
+
+	const h = [0];
+	const c = [0];
+	let home = 0;
+	let cpu = 0;
+
+	for (let i = 0; i < steps; i++) {
+		// simple scoring model per tick (0–3 pts each), with gentle lead swings
+		const swing = Math.sin(i / 6); // oscillates the "momentum"
+		const baseH = Math.random() < 0.65 ? 1 : 0; // ~0.65 prob to score this tick
+		const baseC = Math.random() < 0.65 ? 1 : 0;
+		const bonusH = swing > 0 && Math.random() < 0.35 ? 1 : 0;
+		const bonusC = swing < 0 && Math.random() < 0.35 ? 1 : 0;
+		const extraH = Math.random() < 0.10 ? 1 : 0; // occasional extra bucket
+		const extraC = Math.random() < 0.10 ? 1 : 0;
+
+		home += baseH + bonusH + extraH; // 0–3
+		cpu += baseC + bonusC + extraC; // 0–3
+
+		h.push(home);
+		c.push(cpu);
+	}
+
+	scoreTimeline.home = h;
+	scoreTimeline.cpu = c;
+
+	// Modal öffnen und Diagramm rendern
+	open(chartModal);
+	renderScoreChart();
 }
 
 function init() {
@@ -455,6 +575,7 @@ function init() {
 	settingsBtn.addEventListener("click", () => open(settingsModal));
 	howtoClose.addEventListener("click", () => close(howtoModal));
 	settingsClose.addEventListener("click", () => close(settingsModal));
+	chartClose.addEventListener("click", () => close(chartModal));
 
 	settingsForm.addEventListener("change", (e) => {
 		const t = e.target;
@@ -498,6 +619,7 @@ public members, exposed with return statement
 ---------------------------------------------------------------------------------------------------*/
 globalThis.app = {
 	init,
+	testChart,
 };
 
 app.init();

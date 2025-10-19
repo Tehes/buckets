@@ -32,7 +32,7 @@
                 <img class="team-logo" src="" alt="">
                 <img class="player-photo" src="" alt="">
                 <div class="label">CPU</div>
-                <div class="callout hidden" aria-hidden="true"></div>
+                <div class="callout hidden"></div>
             </div>
             <h1>------</h1>
             <ul>
@@ -67,7 +67,7 @@
                 <img class="team-logo" src="" alt="">
                 <img class="player-photo" src="" alt="">
                 <div class="label">YOU</div>
-                <div class="callout hidden" aria-hidden="true"></div>
+                <div class="callout hidden"></div>
             </div>
             <h1>------</h1>
             <ul>
@@ -117,11 +117,25 @@
             </div>
             <img id="settingsBtn" src="icons/sliders-svgrepo-com.svg" alt="">
         </div>
+
+        <!-- Score Chart Modal -->
+        <aside class="modal hidden" id="chartModal">
+            <div class="modal__header">
+                <h2 id="chartTitle">Score over time</h2>
+                <button class="modal__close" id="chartClose">
+                    <img src="icons/clear-svgrepo-com.svg" alt="Close">
+                </button>
+            </div>
+            <div class="modal__body">
+                <div class="chart-wrap"><canvas id="scoreChart"></canvas></div>
+            </div>
+        </aside>
+
         <!-- HowTo Modal -->
-        <aside class="modal hidden" id="howtoModal" role="dialog" aria-modal="true" aria-labelledby="howtoTitle">
+        <aside class="modal hidden" id="howtoModal">
             <div class="modal__header">
                 <h2 id="howtoTitle">Instructions</h2>
-                <button class="modal__close" id="howtoClose" aria-label="Close">
+                <button class="modal__close" id="howtoClose">
                     <img src="icons/clear-svgrepo-com.svg" alt="Close">
                 </button>
             </div>
@@ -172,10 +186,10 @@
         </aside>
 
         <!-- Settings Modal -->
-        <aside class="modal hidden" id="settingsModal" role="dialog" aria-modal="true" aria-labelledby="settingsTitle">
+        <aside class="modal hidden" id="settingsModal">
             <div class="modal__header">
                 <h2 id="settingsTitle">Settings</h2>
-                <button class="modal__close" id="settingsClose" aria-label="Close">
+                <button class="modal__close" id="settingsClose">
                     <img src="icons/clear-svgrepo-com.svg" alt="Close">
                 </button>
             </div>
@@ -183,7 +197,7 @@
                 <form id="settingsForm">
                     <fieldset>
                         <legend id="leagueLegend">League</legend>
-                        <div role="radiogroup" aria-labelledby="leagueLegend">
+                        <div role="radiogroup">
                             <label for="leagueNBA">
                                 <input type="radio" name="league" id="leagueNBA" value="nba" checked>
                                 NBA
@@ -198,8 +212,7 @@
 
                     <fieldset>
                         <legend id="tickLegend">Clock decrement per matchup</legend>
-                        <!-- Radio group: how many minutes the game clock decreases after each comparison -->
-                        <div role="radiogroup" aria-labelledby="tickLegend">
+                        <div role="radiogroup">
                             <label for="tick1">
                                 <input type="radio" name="tickSize" id="tick1" value="1" checked>
                                 1 minute
