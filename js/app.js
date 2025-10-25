@@ -33,7 +33,7 @@ const categories = [
 
 let firstDeal = false;
 const WAIT_TIME = 3000; // time in ms to wait before next action
-let TICK_SIZE = 1; // minutes to decrement per matchup (1 = default)
+let tickSize = 1; // minutes to decrement per matchup (1 = default)
 let showAllCpuOnCompare = false; // when true, reveal all CPU stats during compare
 const scoreTimeline = {
 	home: [0],
@@ -45,7 +45,7 @@ let scoreChartInstance = null;
 Settings: Save/Load helpers
 ---------------------------------------------------------------------------------------------------*/
 function saveSettings() {
-	const settings = { league, TICK_SIZE, showAllCpuOnCompare };
+	const settings = { league, tickSize, showAllCpuOnCompare };
 	localStorage.setItem("bucketsSettings", JSON.stringify(settings));
 }
 function loadSettings() {
@@ -54,7 +54,7 @@ function loadSettings() {
 	try {
 		const s = JSON.parse(raw);
 		if (s.league) league = s.league;
-		if (s.TICK_SIZE) TICK_SIZE = s.TICK_SIZE;
+		if (s.tickSize) tickSize = s.tickSize;
 		if (typeof s.showAllCpuOnCompare === "boolean") showAllCpuOnCompare = s.showAllCpuOnCompare;
 		deck = decks[league];
 	} catch (e) {
@@ -260,7 +260,7 @@ function checkClock() {
 	const q = ["1st", "2nd", "3rd", "4th"];
 	let i = parseInt(quarter.textContent[0]) - 1;
 	const current = parseInt(clockEl.textContent);
-	const next = current - TICK_SIZE;
+	const next = current - tickSize;
 
 	// 1) Update UI first
 	if (next > 0) {
@@ -472,7 +472,7 @@ function renderScoreChart() {
 	scoreChartInstance = new Chart(ctx, {
 		type: "line",
 		data: {
-			labels: scoreTimeline.home.map((_, i) => i * TICK_SIZE),
+			labels: scoreTimeline.home.map((_, i) => i * tickSize),
 			datasets: [
 				{
 					label: "CPU",
@@ -533,9 +533,9 @@ function renderScoreChart() {
  * Example: app.testChart()
  */
 function testChart() {
-	// Generate test data for full game length and current TICK_SIZE
+	// Generate test data for full game length and current tickSize
 	const totalMinutes = getQuarterLength() * 4; // 48 (NBA) or 40 (WNBA)
-	const steps = Math.floor(totalMinutes / TICK_SIZE);
+	const steps = Math.floor(totalMinutes / tickSize);
 
 	const h = [0];
 	const c = [0];
@@ -588,7 +588,7 @@ function init() {
 		if (t && t.name === "tickSize") {
 			const val = parseInt(t.value, 10);
 			if (val === 1 || val === 2 || val === 4) {
-				TICK_SIZE = val;
+				tickSize = val;
 			}
 		}
 		if (t && t.name === "league") {
@@ -609,7 +609,7 @@ function init() {
 	const revealCb = document.getElementById("revealCpuAll");
 	if (revealCb) revealCb.checked = showAllCpuOnCompare;
 
-	const tickInput = settingsForm.querySelector(`input[name="tickSize"][value="${TICK_SIZE}"]`);
+	const tickInput = settingsForm.querySelector(`input[name="tickSize"][value="${tickSize}"]`);
 	if (tickInput) tickInput.checked = true;
 
 	const leagueInput = settingsForm.querySelector(`input[name="league"][value="${league}"]`);
