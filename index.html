@@ -120,26 +120,26 @@
 
         <!-- Score Chart Modal -->
         <aside class="modal hidden" id="chartModal">
-            <div class="modal__header">
+            <div class="modal-header">
                 <h2 id="chartTitle">Score over time</h2>
-                <button class="modal__close" id="chartClose">
+                <button class="modal-close" id="chartClose">
                     <img src="icons/clear-svgrepo-com.svg" alt="Close">
                 </button>
             </div>
-            <div class="modal__body">
+            <div class="modal-body">
                 <div class="chart-wrap"><canvas id="scoreChart"></canvas></div>
             </div>
         </aside>
 
         <!-- HowTo Modal -->
         <aside class="modal hidden" id="howtoModal">
-            <div class="modal__header">
+            <div class="modal-header">
                 <h2 id="howtoTitle">Instructions</h2>
-                <button class="modal__close" id="howtoClose">
+                <button class="modal-close" id="howtoClose">
                     <img src="icons/clear-svgrepo-com.svg" alt="Close">
                 </button>
             </div>
-            <div class="modal__body">
+            <div class="modal-body">
                 <p>You play as <strong>YOU</strong>. Your card is on the right (desktop) or at the bottom (mobile). The
                     opponent is the <strong>CPU</strong> on the other side. You can switch between NBA and WNBA rosters
                     in the Settings at any time.</p>
@@ -187,13 +187,13 @@
 
         <!-- Settings Modal -->
         <aside class="modal hidden" id="settingsModal">
-            <div class="modal__header">
+            <div class="modal-header">
                 <h2 id="settingsTitle">Settings</h2>
-                <button class="modal__close" id="settingsClose">
+                <button class="modal-close" id="settingsClose">
                     <img src="icons/clear-svgrepo-com.svg" alt="Close">
                 </button>
             </div>
-            <div class="modal__body">
+            <div class="modal-body">
                 <form id="settingsForm">
                     <fieldset>
                         <legend id="leagueLegend">League</legend>
@@ -202,7 +202,7 @@
                                 <input type="radio" name="league" id="leagueNBA" value="nba" checked>
                                 NBA
                             </label>
-                            <label for="leagueWNBA" style="margin-left:1rem">
+                            <label for="leagueWNBA">
                                 <input type="radio" name="league" id="leagueWNBA" value="wnba">
                                 WNBA
                             </label>
@@ -217,11 +217,11 @@
                                 <input type="radio" name="tickSize" id="tick1" value="1" checked>
                                 1 minute
                             </label>
-                            <label for="tick2" style="margin-left:1rem">
+                            <label for="tick2">
                                 <input type="radio" name="tickSize" id="tick2" value="2">
                                 2 minutes
                             </label>
-                            <label for="tick4" style="margin-left:1rem">
+                            <label for="tick4">
                                 <input type="radio" name="tickSize" id="tick4" value="4">
                                 4 minutes
                             </label>
