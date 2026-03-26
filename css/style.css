@@ -211,7 +211,7 @@ main ul {
     list-style: none;
     display: flex;
     flex-wrap: wrap;
-    gap: 5%;
+    gap: 0% 5%;
 }
 
 main li {
