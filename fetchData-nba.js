@@ -7,7 +7,7 @@
 // Usage:
 //   deno run -A fetchdata-nba.js
 //
-// This writes players stats into data.json.
+// This writes player stats into data-nba.json.
 // ---------------------------------------------------------------------------
 
 import puppeteer from "https://deno.land/x/puppeteer@16.2.0/mod.ts";
@@ -40,8 +40,26 @@ const browser = await puppeteer.launch({
 try {
 	const page = await browser.newPage();
 
+	// Pretend to be a real browser to avoid CDN/consent blocking
+	await page.setUserAgent(
+		"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36",
+	);
+	await page.setExtraHTTPHeaders({
+		"Accept-Language": "en-US,en;q=0.9",
+		"Referer": "https://www.nba.com/",
+	});
+
 	console.log("⏳  Opening NBA stats page …");
 	await page.goto(TARGET_URL, { waitUntil: "networkidle2", timeout: TIMEOUT_MS });
+
+	// Handle OneTrust cookie banner if present
+	try {
+		await page.waitForSelector("#onetrust-accept-btn-handler", { timeout: 5000 });
+		await page.click("#onetrust-accept-btn-handler");
+		console.log("✅ Accepted cookie banner");
+	} catch (_) {
+		// banner not present
+	}
 
 	// Wait until the main table element is present
 	await page.waitForSelector("table", { timeout: TIMEOUT_MS });
@@ -201,7 +219,7 @@ try {
 	});
 
 	await Deno.writeTextFile("data-nba.json", JSON.stringify(data, null, 2));
-	console.log(`✅ Saved ${data.length} normalized player records to data.json`);
+	console.log(`✅ Saved ${data.length} normalized player records to data-nba.json`);
 } catch (err) {
 	console.error("❌  Scraping failed:", err.message);
 	throw err;
