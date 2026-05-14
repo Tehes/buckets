@@ -6,7 +6,7 @@ the higher total after four quarters wins the game.
 
 ---
 
-## License and usage
+## 📖 License and usage
 
 This project is source-available, not open source.
 
@@ -105,10 +105,6 @@ Supports both NBA and WNBA rosters.
 - Legacy Puppeteer scrapers are kept in `legacy/` as a fallback if the stats API breaks.
 
 ---
-
-## 📖 License
-
-Distributed under the [MIT License](LICENSE).
 
 ## 🙏 Credits
 
