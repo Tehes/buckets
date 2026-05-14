@@ -1,20 +1,20 @@
 {
-    "fmt": {
-        "useTabs": true,
-        "indentWidth": 4,
-        "lineWidth": 150,
-        "singleQuote": false,
-        "semiColons": true
-    },
-    "lint": {
-        "rules": {
-            "tags": [
-                "recommended"
-            ]
-        }
-    },
-    "tasks": {
-        "fetchNBA": "deno run -A fetchData-nba.js",
-        "fetchWNBA": "deno run -A fetchData-wnba.js"
-    }
+	"fmt": {
+		"useTabs": true,
+		"indentWidth": 4,
+		"lineWidth": 150,
+		"singleQuote": false,
+		"semiColons": true
+	},
+	"lint": {
+		"rules": {
+			"tags": [
+				"recommended"
+			]
+		}
+	},
+	"tasks": {
+		"fetchNBA": "deno run --allow-net=stats.nba.com --allow-write=data-nba.json fetchAPI-nba.js",
+		"fetchWNBA": "deno run --allow-net=stats.wnba.com --allow-write=data-wnba.json fetchAPI-wnba.js"
+	}
 }

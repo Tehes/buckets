@@ -1,18 +1,19 @@
-// fetchAPI.js
-// Holt NBA‑League‑Leader‑Daten direkt über die offizielle JSON‑API
-// und speichert das Ergebnis im gewünschten Format in data.json.
+// fetchAPI-wnba.js
+// Holt WNBA-League-Leader-Daten direkt über die offizielle JSON-API
+// und speichert das Ergebnis im gewünschten Format in data-wnba.json.
 
-console.log("Fetching NBA league leaders via API …");
+console.log("Fetching WNBA league leaders via API ...");
 
 const params = new URLSearchParams({
-	LeagueID: "00",
-	Season: "2024-25",
+	LeagueID: "10",
+	PerMode: "PerGame",
+	Scope: "S",
+	Season: "2025",
 	SeasonType: "Regular Season",
 	StatCategory: "EFF",
-	PerMode: "PerGame",
 });
 
-const url = `https://stats.nba.com/stats/leagueleaders?${params}`;
+const url = `https://stats.wnba.com/stats/leagueLeaders?${params}`;
 
 try {
 	const res = await fetch(url);
@@ -26,16 +27,16 @@ try {
 	}
 
 	const rawHeaders = result.headers;
-	// ── Filter: mind. 18 Minuten & 61 Spiele ──
+	// Filter: mind. 12 Minuten & 25 Spiele
 	const idxMIN = rawHeaders.indexOf("MIN");
 	const idxGP = rawHeaders.indexOf("GP");
 
-	const MAX_RECORDS = 130;
+	const MAX_RECORDS = 96;
 	const rows = result.rowSet
-		.filter((row) => row[idxMIN] > 17 && row[idxGP] >= 60 && row[idxGP] <= 82)
+		.filter((row) => row[idxMIN] >= 12 && row[idxGP] >= 25 && row[idxGP] <= 44)
 		.slice(0, MAX_RECORDS);
 
-	// Mapping von API‑Headern zu gewünschten Keys
+	// Mapping von API-Headern zu gewünschten Keys
 	const map = {
 		RANK: "#",
 		PLAYER: "player",
@@ -73,7 +74,7 @@ try {
 			const key = map[rawKey];
 			if (key) {
 				let v = value;
-				// Prozentwerte (0.576 → 57.6) auf eine Nachkommastelle skalieren
+				// Prozentwerte (0.576 -> 57.6) auf eine Nachkommastelle skalieren
 				if (["FG_PCT", "FG3_PCT", "FT_PCT"].includes(rawKey)) {
 					v = (v * 100).toFixed(1);
 				}
@@ -82,16 +83,16 @@ try {
 			}
 		});
 
-		// Headshot‑URL ergänzen
+		// Headshot-URL ergänzen
 		if (obj.id) {
-			obj.pic = `https://cdn.nba.com/headshots/nba/latest/1040x760/${obj.id}.png`;
+			obj.pic = `https://ak-static.cms.nba.com/wp-content/uploads/headshots/wnba/latest/1040x760/${obj.id}.png`;
 		}
 
 		return obj;
 	});
 
-	await Deno.writeTextFile("data.json", JSON.stringify(data, null, 2));
-	console.log(`Saved ${data.length} records to data.json`);
+	await Deno.writeTextFile("data-wnba.json", JSON.stringify(data, null, 2));
+	console.log(`Saved ${data.length} records to data-wnba.json`);
 } catch (err) {
-	console.error("fetchdeno.js error:", err);
+	console.error("fetchAPI-wnba.js error:", err);
 }

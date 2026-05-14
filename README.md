@@ -63,10 +63,10 @@ Supports both NBA and WNBA rosters.
 │   └── app.js        # Game logic
 ├── css/
 │   └── style.css     # Styling
-├── fetchData-nba.js   # Deno script – scrapes NBA stats
-├── fetchData-wnba.js  # Deno script – scrapes WNBA stats
-├── data-nba.json      # Scraped NBA player statistics
-├── data-wnba.json     # Scraped WNBA player statistics
+├── fetchAPI-nba.js    # Deno script – fetches NBA stats from the JSON API
+├── fetchAPI-wnba.js   # Deno script – fetches WNBA stats from the JSON API
+├── data-nba.json      # NBA player statistics
+├── data-wnba.json     # WNBA player statistics
 └── deno.json         # Deno task configuration
 ```
 
@@ -92,11 +92,12 @@ Supports both NBA and WNBA rosters.
 
 - CSS variables are namespaced by league (e.g. `--nba-den`, `--wnba-nyl`).
 
-### Data Scraper (`fetchData-nba.js`, `fetchData-wnba.js`)
+### Data Fetch (`fetchAPI-nba.js`, `fetchAPI-wnba.js`)
 
-- Puppeteer scripts to refresh **data-nba.json** and **data-wnba.json** from stats.nba.com and wnba.com.
+- API scripts refresh **data-nba.json** and **data-wnba.json** from stats.nba.com and stats.wnba.com.
 - Filters for rotation-level players in each league, applies league-specific thresholds, then ranks and trims by EFF.
 - Adds player image URLs.
+- Run with `deno task fetchNBA` or `deno task fetchWNBA`.
 
 ---
 
