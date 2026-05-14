@@ -12,6 +12,7 @@
     --highlight: hsla(0, 0%, 100%, 0.3);
     --bg-left: hsl(0, 0%, 85%);
     --bg-right: hsl(0, 0%, 70%);
+
     /* NBA */
     --nba-ATL: #e03a3e;
     --nba-BKN: #000000;
@@ -53,9 +54,11 @@
     --wnba-IND: #e03a3e;
     --wnba-LAS: #552C82;
     --wnba-WAS: #002b5c;
+    --wnba-TOR: #612C51;
     --wnba-LVA: #000000;
     --wnba-MIN: #305c98;
     --wnba-NYL: #86CEBC;
+    --wnba-PDX: #C8102E;
     --wnba-PHX: #e64e1d;
     --wnba-SEA: #2a4c31;
 }
