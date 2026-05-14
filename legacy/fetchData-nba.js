@@ -1,11 +1,13 @@
 // ---------------------------------------------------------------------------
+// Legacy fallback. Prefer ../fetchAPI-nba.js for regular data refreshes.
+//
 // Scrapes the NBA Regular‑Season EFF‑Per‑Game leaders (first 130 rows)
 // with **Puppeteer** (runs headless Chromium in Deno, no node_modules).
 // Only includes players with complete stats.
 // Adds player image URLs.
 //
 // Usage:
-//   deno run -A fetchdata-nba.js
+//   deno run -A legacy/fetchData-nba.js
 //
 // This writes player stats into data-nba.json.
 // ---------------------------------------------------------------------------

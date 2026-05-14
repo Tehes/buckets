@@ -1,13 +1,15 @@
 // ---------------------------------------------------------------------------
-// Scrapes the NBA Regular‑Season EFF‑Per‑Game leaders (first 130 rows)
+// Legacy fallback. Prefer ../fetchAPI-wnba.js for regular data refreshes.
+//
+// Scrapes the WNBA Regular‑Season EFF‑Per‑Game leaders (first 96 rows)
 // with **Puppeteer** (runs headless Chromium in Deno, no node_modules).
 // Only includes players with complete stats.
 // Adds player image URLs.
 //
 // Usage:
-//   deno run -A fetchdata-wnba.js
+//   deno run -A legacy/fetchData-wnba.js
 //
-// This writes players stats into data.json.
+// This writes player stats into data-wnba.json.
 // ---------------------------------------------------------------------------
 
 import puppeteer from "https://deno.land/x/puppeteer@16.2.0/mod.ts";
