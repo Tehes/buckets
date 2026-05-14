@@ -6,6 +6,22 @@ the higher total after four quarters wins the game.
 
 ---
 
+## License and usage
+
+This project is source-available, not open source.
+
+You may view and modify the code for personal, educational, and non-commercial purposes.
+
+If you publicly redistribute this project or a modified version of it, you must:
+
+- link to the original project repository
+- include a visible attribution to the original project and author, where technically and contextually appropriate
+- clearly mark your version as modified and unofficial
+
+Commercial use, paid hosting, resale, and misleading rebranding are not allowed without prior written permission.
+
+---
+
 ## 🎮 How to Play
 
 1. **Deck Setup** – Each round you draw a **random** player card for the Home team.\
