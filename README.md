@@ -75,8 +75,8 @@ Supports both NBA and WNBA rosters.
 
 ### Game Logic (`app.js`)
 
-- Loads **data.json** and shuffles the deck once at game start—every draw is fully random **for you**; the CPU card is selected by the handicap
-  algorithm.
+- Imports **data-nba.json** and **data-wnba.json** and shuffles the deck once at game start—every draw is fully random **for you**;
+  the CPU card is selected by the handicap algorithm.
 - **Dynamic handicap:** Depending on the score, the game allows the CPU card to beat yours in 0 – N categories (N shrinks when you lead, grows when
   you trail).\
   The algorithm increases or decreases this limit in ±1 steps until it finds a matching card, so games stay close without feeling scripted.
