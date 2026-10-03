@@ -8,7 +8,7 @@ const params = new URLSearchParams({
 	LeagueID: "10",
 	PerMode: "PerGame",
 	Scope: "S",
-	Season: "2025",
+	Season: "2026",
 	SeasonType: "Regular Season",
 	StatCategory: "EFF",
 });
